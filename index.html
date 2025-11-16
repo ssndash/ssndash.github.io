@@ -37,7 +37,7 @@
 
         <div class="footer">
             <p>Вы посетитель номер:</p>
-            <img src="https://assets.website-files.com/624d40d02e11893339d2dbf7/62545300f86c23b6c7a38e83_Counter.gif" alt="Счетчик посетителей">
+<div id="visitorCounter">Идёт подсчёт...</div>
             
             <p style="font-size: 12px;">© 1998 [Ваше Имя].<br>Сделано в Блокноте.</p>
             <img src="https://blob.gifcities.org/gifcities/CU3UCZC5FQZCE43A5KJAJZAWQNOZENDR.gif" alt="Работает лучше с Internet Explorer!">
@@ -47,6 +47,34 @@
         </div>
 
     </div>
-
+<script>
+    // Функция для обновления счетчика
+    function updateCounter() {
+        const counterElement = document.getElementById('visitorCounter');
+        
+        // Генерируем случайное число от 0 до 999
+        let randomValue = Math.floor(Math.random() * 1000);
+        
+        // Определяем, что показывать, с разной вероятностью
+        if (randomValue === 777) { // Самый редкий шанс (~0.1%)
+            counterElement.textContent = 'SSNDash - Наше всё!';
+            counterElement.style.color = '#ff0000'; // Можно задать особый цвет
+            counterElement.style.fontWeight = 'bold';
+        } else {
+            // Генерируем "реалистичное" число посетителей от 1 до 500
+            let visitorCount = Math.floor(Math.random() * 500) + 1;
+            counterElement.textContent = `Посетителей онлайн: ${visitorCount}`;
+            // Сбрасываем стили на обычные
+            counterElement.style.color = '';
+            counterElement.style.fontWeight = '';
+        }
+    }
+    
+    // Обновляем счетчик сразу при загрузке
+    updateCounter();
+    
+    // Можно также обновлять его периодически (например, каждые 10 секунд)
+    setInterval(updateCounter, 10000);
+</script>
 </body>
 </html>
