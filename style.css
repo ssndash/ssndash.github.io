@@ -4,7 +4,7 @@
 
 body {
     /* Классический серый фон "Windows 95" */
-    background-color: #000000;
+    background-color: black;
     
     /* Текстурный фон из гифки - еще лучше! */
     background-image: url('https://gifcities.org/images/backgrounds/space/3.gif');
