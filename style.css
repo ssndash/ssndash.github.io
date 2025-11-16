@@ -1,0 +1,82 @@
+/*
+    СТИЛИ ДЛЯ САЙТА ИЗ 1990-х
+*/
+
+body {
+    /* Классический серый фон "Windows 95" */
+    background-color: #C0C0C0;
+    
+    /* Текстурный фон из гифки - еще лучше! */
+    background-image: url('https://gifcities.org/images/backgrounds/space/3.gif');
+    background-attachment: fixed; /* Фон не прокручивается */
+
+    /* "Безопасный" шрифт с засечками */
+    font-family: 'Times New Roman', Times, serif;
+    color: #000000; /* Черный текст */
+}
+
+.container {
+    /* Создаем 3D-эффект "вдавленной" или "выпуклой" панели */
+    width: 800px;
+    margin: 20px auto; /* Центрируем на странице */
+    padding: 20px;
+    background-color: #E0E0E0; /* Фон контейнера чуть светлее */
+    
+    /* Магия 90-х: 3D-рамка */
+    border: 3px outset #999999;
+    box-shadow: 10px 10px 5px #00000080; /* Грубая тень */
+}
+
+.header {
+    border: 2px dashed #000080; /* Пунктирная рамка */
+    padding: 10px;
+}
+
+h1 {
+    /* Шрифт, который все ненавидели, но использовали */
+    font-family: 'Comic Sans MS', cursive;
+    font-size: 36px;
+    text-align: center;
+    color: #FF0000; /* Ярко-красный */
+    /* "Объемный" текст с тенью */
+    text-shadow: 2px 2px #FFFF00, 4px 4px #0000FF; 
+}
+
+h2 {
+    color: #000080; /* Темно-синий */
+    border-bottom: 2px solid #000000;
+}
+
+marquee {
+    font-weight: bold;
+    color: #008000; /* Зеленый бегущий текст */
+    font-size: 18px;
+    background-color: #FFFF00; /* На желтом фоне! */
+    padding: 5px;
+}
+
+/* Классические цвета ссылок */
+a {
+    color: #0000FF; /* Ярко-синий */
+    text-decoration: underline; /* Подчеркивание обязательно */
+    font-weight: bold;
+}
+
+a:visited {
+    color: #800080; /* Пурпурный (посещенная ссылка) */
+}
+
+img {
+    /* Чтобы гифки были по центру */
+    display: block;
+    margin: 15px auto;
+}
+
+.footer {
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer img {
+    border: 2px solid #000; /* Рамка для "счетчика" */
+}
