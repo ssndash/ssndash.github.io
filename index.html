@@ -36,7 +36,6 @@
         <hr>
 
         <div class="footer">
-            <p>Вы посетитель номер:</p>
 <div id="visitorCounter">Идёт подсчёт...</div>
             
             <p style="font-size: 12px;">© 1998 [Ваше Имя].<br>Сделано в Блокноте.</p>
@@ -63,7 +62,7 @@
         } else {
             // Генерируем "реалистичное" число посетителей от 1 до 500
             let visitorCount = Math.floor(Math.random() * 500) + 1;
-            counterElement.textContent = `Посетителей онлайн: ${visitorCount}`;
+            counterElement.textContent = `Вы посетитель номер: ${visitorCount}`;
             // Сбрасываем стили на обычные
             counterElement.style.color = '';
             counterElement.style.fontWeight = '';
