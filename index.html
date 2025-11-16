@@ -56,16 +56,15 @@
         
         // Определяем, что показывать, с разной вероятностью
         if (randomValue === 777) { // Самый редкий шанс (~0.1%)
-            counterElement.textContent = 'SSNDash - Наше всё!';
-            counterElement.style.color = '#ff0000'; // Можно задать особый цвет
-            counterElement.style.fontWeight = 'bold';
+            counterElement.innerHTML = 'SSNDash - Наше всё!';
+            counterElement.style.color = '#ff0000';
+            counterElement.style.fontWeight = 'normal';
         } else {
             // Генерируем "реалистичное" число посетителей от 1 до 500
             let visitorCount = Math.floor(Math.random() * 500) + 1;
-            counterElement.textContent = `Вы посетитель номер: ${visitorCount}`;
-            // Сбрасываем стили на обычные
+            counterElement.innerHTML = `<strong>Посетителей онлайн:</strong> ${visitorCount}`;
             counterElement.style.color = '';
-            counterElement.style.fontWeight = '';
+            counterElement.style.fontWeight = 'normal';
         }
     }
     
