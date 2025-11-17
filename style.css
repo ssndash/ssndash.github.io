@@ -100,6 +100,61 @@ img {
     color: #555;
 }
 
+.form-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    /* 1-я колонка для <label>, 2-я для <input> */
+    gap: 10px;
+}
+
+.form-grid label {
+    grid-column: 1 / 2;
+    text-align: right;
+    font-weight: bold;
+    padding-top: 5px;
+    /* Для выравнивания с полем ввода */
+}
+
+.form-grid input,
+.form-grid textarea {
+    grid-column: 2 / 3;
+    width: 95%;
+    border: 1px solid #000;
+}
+
+/* Для textarea, чтобы она занимала место правильно */
+.form-grid label[for="message"] {
+    padding-top: 0;
+}
+
+/* 7. Стилизация кнопок под "старину" (3D-эффект) */
+.button-container {
+    text-align: center;
+    /* Центрируем кнопки */
+    margin-top: 15px;
+}
+
+.button-container button {
+    background-color: #C0C0C0;
+    /* Классический серый */
+    border-top: 2px solid #FFFFFF;
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+    padding: 8px 15px;
+    font-weight: bold;
+    font-family: "Times New Roman", serif;
+    cursor: pointer;
+}
+
+.button-container button:active {
+    /* Эффект "нажатия" */
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #FFFFFF;
+    border-bottom: 2px solid #FFFFFF;
+}
+
 .footer {
     text-align: center;
     font-size: 14px;
