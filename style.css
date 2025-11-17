@@ -72,6 +72,34 @@ img {
     margin: 15px auto;
 }
 
+.retro-table {
+    width: 100%;
+    border-collapse: collapse; /* Классические рамки */
+    margin-bottom: 20px;
+}
+.retro-table td {
+    border: 1px solid #000000;
+    padding: 10px;
+    text-align: center;
+    vertical-align: top;
+    width: 33.33%;
+}
+
+/* Заглушка для аватара */
+.avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    background-color: #EEEEEE;
+    border: 1px dashed #000000;
+    margin: 0 auto 10px auto;
+    /* Центрирование текста-заглушки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    color: #555;
+}
+
 .footer {
     text-align: center;
     font-size: 14px;
