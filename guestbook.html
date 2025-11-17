@@ -9,29 +9,43 @@
 </head>
 <body>
 
-  <div class="wrapper">
+  <div class="container">
+      <div class="header">
+            <h1>!!_ Оставь свою запись в книге _!!</h1>
+        </div>
 
-    <div class="marquee">
-      Оставь свою запись в книге
+      <div class="content">
+        <fieldset>
+          <div class="form-grid">
+            <label for="username">Твой ник:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">Твой E-mail:</label>
+            <input type="email" id="email" name="email">
+
+            <label for="message">Твое сообщение:</label>
+            <textarea id="message" name="message" rows="8" required></textarea>
+          </div>
+
+          <div class="button-container">
+            <button type="submit">!!! ОСТАВИТЬ ЗАПИСЬ !!!</button>
+            <button type="reset">Стереть всё></button>
+          </div>
+        </fieldset>
+      </div>
+    
+      <hr>
+      <div class="footer">
+        <div id="visitorCounter">Идёт подсчёт...</div>
+        <script src="scripts/counter.js"></script>
+        <p style="font-size: 12px;">© 2025 SSNDash.<br>Сделано в Блокноте, Gemini и DeepSeek.</p>
+        <a href="pages/ie_iframe.html">
+          <img src="assets/bestviewedwithie.gif" alt="Работает лучше с Internet Explorer!">
+        <a href="pages/kaspersky_iframe.html">
+          <img src="assets/protectedbykaspersky.png" alt="Территория находится под охраной Лаборотории Касперского!">
+        </a>
+        </div>
+
     </div>
-
-    <form class="guestbook-form" action="[АДРЕС_ОБРАБОТЧИКА]" method="POST">
-      <fieldset>
-        <div class="form-grid">
-          <label for="username">Твой ник:</label>
-          <input type="text" id="username" name="username" required>
-
-          <label for="email">Твой E-mail:</label>
-          <input type="email" id="email" name="email">
-
-          <label for="message">Твое сообщение:</label>
-          <textarea id="message" name="message" rows="8" required></textarea>
-        </div>
-
-        <div class="button-container">
-          <button type="submit">!!! ОСТАВИТЬ ЗАПИСЬ !!!</button>
-          <button type="reset">Стереть всё></button>
-        </div>
-        
-      </fieldset>
-    </form>
+</body>
+</html>
