@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSNBank</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'MS Sans Serif', 'Microsoft Sans Serif', Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: #008080 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="white" width="50" height="50"/><rect fill="white" x="50" y="50" width="50" height="50"/></svg>');
+            background-size: 100px 100px;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Рабочий стол */
+        .desktop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 32px;
+            overflow: hidden;
+        }
+
+        /* Панель задач */
+        .taskbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: #c0c0c0;
+            border-top: 1px solid #dfdfdf;
+            display: flex;
+            align-items: center;
+            padding: 0 3px;
+            z-index: 1000;
+        }
+
+        /* Кнопка Пуск */
+        .start-button {
+            height: 26px;
+            padding: 0 10px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 13px;
+            margin-right: 5px;
+            gap: 5px;
+        }
+
+        .start-button:active {
+            border-top-color: #808080;
+            border-left-color: #808080;
+            border-right-color: #dfdfdf;
+            border-bottom-color: #dfdfdf;
+        }
+
+        .start-button-icon {
+            width: 16px;
+            height: 16px;
+            background-image: url('https://win98icons.alexmeub.com/icons/png/windows-4.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Область запущенных приложений */
+        .taskbar-apps {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* Часы */
+        .clock {
+            padding: 0 10px;
+            font-size: 12px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            border: 1px inset #c0c0c0;
+            background: #c0c0c0;
+            margin-left: auto;
+        }
+
+        /* Окно */
+        .window {
+            position: absolute;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+        }
+
+        .window.active {
+            z-index: 100;
+        }
+
+        .title-bar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            color: white;
+            padding: 3px 5px;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .title-bar-controls {
+            display: flex;
+        }
+
+        .title-bar-button {
+            width: 16px;
+            height: 14px;
+            margin-left: 2px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            font-size: 9px;
+            text-align: center;
+            line-height: 12px;
+            cursor: pointer;
+        }
+
+        .window-content {
+            padding: 15px;
+            height: calc(100% - 23px);
+            overflow: auto;
+        }
+
+        /* Стили для окна оплаты */
+        .bank-logo {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000080;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 4px;
+            border: 2px inset #c0c0c0;
+            background: white;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 200px;
+            resize: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-row > div {
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 6px 15px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .button:active {
+            border-top-color: #808080;
+            border-left-color: #808080;
+            border-right-color: #dfdfdf;
+            border-bottom-color: #dfdfdf;
+        }
+
+        .status-bar {
+            background: #c0c0c0;
+            border-top: 1px solid #808080;
+            padding: 3px 5px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .amount-display {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border: 2px inset #c0c0c0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .security-notice {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 15px;
+            color: #808080;
+        }
+
+        .divider {
+            height: 2px;
+            background: #808080;
+            margin: 15px 0;
+            border-top: 1px solid #dfdfdf;
+        }
+
+        /* Иконки на рабочем столе */
+        .desktop-icons {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70px;
+            text-align: center;
+            cursor: pointer;
+            color: white;
+            text-shadow: 1px 1px 1px black;
+            font-size: 12px;
+        }
+
+        .desktop-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .desktop-icon > div:first-child {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 5px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Иконки Windows 95 */
+        .icon-computer {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/computer_explorer-2.png');
+        }
+
+        .icon-recycle {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/recycle_bin_full-0.png');
+        }
+
+        .icon-notepad {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/notepad_file-2.png');
+        }
+
+        .icon-bank {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/globe_map-2.png');
+        }
+
+        .icon-folder {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/directory_closed-4.png');
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            margin-right: 5px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .icon-file {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/text_file-0.png');
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            margin-right: 5px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .icon-exe {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/msdos-1.png');
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            margin-right: 5px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .icon-music {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/cd_audio_cd-1.png');
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            margin-right: 5px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .icon-image {
+            background-image: url('https://win98icons.alexmeub.com/icons/png/paint_file-2.png');
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            margin-right: 5px;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Меню Пуск */
+        .start-menu {
+            position: absolute;
+            bottom: 32px;
+            left: 0;
+            width: 200px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            display: none;
+            z-index: 1001;
+        }
+
+        .start-menu-header {
+            background: #000080;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .start-menu-items {
+            padding: 5px 0;
+        }
+
+        .start-menu-item {
+            padding: 5px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .start-menu-item:hover {
+            background: #000080;
+            color: white;
+        }
+
+        .start-menu-item img {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Кнопка приложения в панели задач */
+        .taskbar-app {
+            height: 22px;
+            padding: 0 10px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-top-color: #dfdfdf;
+            border-left-color: #dfdfdf;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            margin-right: 2px;
+            cursor: pointer;
+            max-width: 200px;
+            overflow: hidden;
+        }
+
+        .taskbar-app.active {
+            border: 1px inset #c0c0c0;
+        }
+
+        /* Проводник */
+        .explorer-toolbar {
+            background: #c0c0c0;
+            border-bottom: 1px solid #808080;
+            padding: 3px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .explorer-content {
+            display: flex;
+            height: calc(100% - 60px);
+        }
+
+        .explorer-sidebar {
+            width: 150px;
+            border-right: 1px solid #808080;
+            padding: 5px;
+            background: white;
+        }
+
+        .explorer-files {
+            flex: 1;
+            padding: 5px;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            padding: 2px 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-item:hover {
+            background: #000080;
+            color: white;
+        }
+
+        /* Корзина */
+        .recycle-bin-content {
+            padding: 10px;
+            background: white;
+            height: calc(100% - 60px);
+            overflow-y: auto;
+        }
+
+        .recycle-item {
+            padding: 5px;
+            border-bottom: 1px solid #c0c0c0;
+            display: flex;
+            align-items: center;
+        }
+
+        .file-list {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px inset #c0c0c0;
+            background: white;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Рабочий стол -->
+    <div class="desktop">
+        <!-- Иконки на рабочем столе -->
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openPaymentWindow()">
+                <div class="icon-bank"></div>
+                <div>SSNBank</div>
+            </div>
+            <div class="desktop-icon" onclick="openExplorer()">
+                <div class="icon-computer"></div>
+                <div>Мой компьютер</div>
+            </div>
+            <div class="desktop-icon" onclick="openRecycleBin()">
+                <div class="icon-recycle"></div>
+                <div>Корзина</div>
+            </div>
+            <div class="desktop-icon" onclick="openNotepad()">
+                <div class="icon-notepad"></div>
+                <div>Блокнот</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Окно оплаты SSNBank -->
+    <div class="window" id="paymentWindow" style="width: 500px; height: 550px; top: 50px; left: 100px;">
+        <div class="title-bar">
+            <div class="title-bar-text" id="paymentWindowTitle">SSNBank - Оплата онлайн</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" onclick="minimizeWindow('paymentWindow')">_</button>
+                <button class="title-bar-button" onclick="maximizeWindow('paymentWindow')">□</button>
+                <button class="title-bar-button" onclick="closeWindow('paymentWindow')">×</button>
+            </div>
+        </div>
+
+        <div class="window-content">
+            <div class="bank-logo">SSNBank</div>
+
+            <div class="amount-display">
+                Сумма к оплате: <span id="amountValue" style="color: #000080;">1 500 руб.</span>
+            </div>
+
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="cardNumber">Номер карты:</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                </div>
+
+                <div class="form-group">
+                    <label for="cardHolder">Имя владельца:</label>
+                    <input type="text" id="cardHolder" placeholder="IVAN IVANOV">
+                </div>
+
+                <div class="card-row">
+                    <div class="form-group">
+                        <label for="expiryDate">Срок действия:</label>
+                        <input type="text" id="expiryDate" placeholder="ММ/ГГ">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV код:</label>
+                        <input type="text" id="cvv" placeholder="123">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentType">Тип платежа:</label>
+                    <select id="paymentType">
+                        <option>Одноразовый платеж</option>
+                        <option>Регулярный платеж</option>
+                        <option>Благотворительность</option>
+                    </select>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="button-group">
+                    <button type="button" class="button" onclick="generateRandomAmount()">Случайная сумма</button>
+                    <button type="button" class="button" onclick="cancelPayment()">Отмена</button>
+                    <button type="button" class="button" onclick="processPayment()">Оплатить</button>
+                </div>
+            </form>
+
+            <div class="security-notice">
+                SSNBank - Надежность с 1998 года
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-bar-field">Для связи: email@example.com</div>
+            <div class="status-bar-field">Версия 1.0</div>
+        </div>
+    </div>
+
+    <!-- Проводник -->
+    <div class="window" id="explorerWindow" style="width: 600px; height: 400px; top: 80px; left: 150px;">
+        <div class="title-bar">
+            <div class="title-bar-text" id="explorerWindowTitle">Проводник - Мой компьютер</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" onclick="minimizeWindow('explorerWindow')">_</button>
+                <button class="title-bar-button" onclick="maximizeWindow('explorerWindow')">□</button>
+                <button class="title-bar-button" onclick="closeWindow('explorerWindow')">×</button>
+            </div>
+        </div>
+
+        <div class="explorer-toolbar">
+            <button class="button" onclick="explorerBack()">Назад</button>
+            <button class="button" onclick="explorerForward()">Вперед</button>
+            <button class="button" onclick="explorerUp()">Вверх</button>
+        </div>
+
+        <div class="explorer-content">
+            <div class="explorer-sidebar">
+                <div class="file-item" onclick="openDrive('C:')">
+                    <span class="icon-folder"></span> Локальный диск (C:)
+                </div>
+                <div class="file-item" onclick="openDrive('D:')">
+                    <span class="icon-folder"></span> Локальный диск (D:)
+                </div>
+                <div class="file-item" onclick="openDrive('A:')">
+                    <span class="icon-folder"></span> Дисковод (A:)
+                </div>
+                <div class="file-item" onclick="openRecycleBin()">
+                    <span class="icon-recycle" style="width:16px;height:16px;display:inline-block;margin-right:5px;"></span> Корзина
+                </div>
+            </div>
+            <div class="explorer-files" id="explorerFiles">
+                <!-- Содержимое будет заполнено JavaScript -->
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-bar-field" id="explorerStatus">Объектов: 0</div>
+            <div class="status-bar-field" id="explorerLocation">Мой компьютер</div>
+        </div>
+    </div>
+
+    <!-- Корзина -->
+    <div class="window" id="recycleBinWindow" style="width: 500px; height: 400px; top: 100px; left: 200px;">
+        <div class="title-bar">
+            <div class="title-bar-text" id="recycleBinWindowTitle">Корзина</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" onclick="minimizeWindow('recycleBinWindow')">_</button>
+                <button class="title-bar-button" onclick="maximizeWindow('recycleBinWindow')">□</button>
+                <button class="title-bar-button" onclick="closeWindow('recycleBinWindow')">×</button>
+            </div>
+        </div>
+
+        <div class="recycle-bin-content">
+            <div class="file-list" id="recycleBinList">
+                <!-- Содержимое корзины -->
+            </div>
+            <div class="button-group">
+                <button class="button" onclick="emptyRecycleBin()">Очистить корзину</button>
+                <button class="button" onclick="restoreAllFiles()">Восстановить все</button>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-bar-field" id="recycleBinStatus">Файлов: 0</div>
+            <div class="status-bar-field">Корзина</div>
+        </div>
+    </div>
+
+    <!-- Блокнот -->
+    <div class="window" id="notepadWindow" style="width: 500px; height: 400px; top: 120px; left: 250px;">
+        <div class="title-bar">
+            <div class="title-bar-text" id="notepadWindowTitle">Блокнот - Безымянный</div>
+            <div class="title-bar-controls">
+                <button class="title-bar-button" onclick="minimizeWindow('notepadWindow')">_</button>
+                <button class="title-bar-button" onclick="maximizeWindow('notepadWindow')">□</button>
+                <button class="title-bar-button" onclick="closeWindow('notepadWindow')">×</button>
+            </div>
+        </div>
+
+        <div class="window-content">
+            <textarea id="notepadText" placeholder="Введите ваш текст здесь..."></textarea>
+            <div class="button-group">
+                <button class="button" onclick="saveNotepad()">Сохранить</button>
+                <button class="button" onclick="clearNotepad()">Очистить</button>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-bar-field">Строка 1, Столбец 1</div>
+            <div class="status-bar-field">Блокнот</div>
+        </div>
+    </div>
+
+    <!-- Панель задач -->
+    <div class="taskbar">
+        <div class="start-button" onclick="toggleStartMenu()">
+            <div class="start-button-icon"></div>
+            <span>Пуск</span>
+        </div>
+        
+        <div class="taskbar-apps" id="taskbarApps">
+            <!-- Запущенные приложения будут добавляться сюда -->
+        </div>
+        
+        <div class="clock" id="clock">00:00:00</div>
+    </div>
+
+    <!-- Меню Пуск -->
+    <div class="start-menu" id="startMenu">
+        <div class="start-menu-header">Windows 95</div>
+        <div class="start-menu-items">
+            <div class="start-menu-item" onclick="openPaymentWindow()">
+                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/globe_map-2.png') no-repeat center/contain;"></span> SSNBank
+            </div>
+            <div class="start-menu-item" onclick="openExplorer()">
+                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/computer_explorer-2.png') no-repeat center/contain;"></span> Мой компьютер
+            </div>
+            <div class="start-menu-item" onclick="openRecycleBin()">
+                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/recycle_bin_full-0.png') no-repeat center/contain;"></span> Корзина
+            </div>
+            <div class="start-menu-item" onclick="openNotepad()">
+                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/notepad_file-2.png') no-repeat center/contain;"></span> Блокнот
+            </div>
+            <div class="divider"></div>
+            <div class="start-menu-item" onclick="shutdown()">
+                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/shut_down_with_computer-0.png') no-repeat center/contain;"></span> Завершение работы...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Данные для файловой системы
+        const fileSystem = {
+            'C:': [
+                { name: 'Windows', type: 'folder', icon: 'folder' },
+                { name: 'Program Files', type: 'folder', icon: 'folder' },
+                { name: 'Documents', type: 'folder', icon: 'folder' },
+                { name: 'autoexec.bat', type: 'file', icon: 'file' },
+                { name: 'config.sys', type: 'file', icon: 'file' }
+            ],
+            'D:': [
+                { name: 'Games', type: 'folder', icon: 'folder' },
+                { name: 'Music', type: 'folder', icon: 'folder' },
+                { name: 'Photos', type: 'folder', icon: 'folder' },
+                { name: 'readme.txt', type: 'file', icon: 'file' }
+            ],
+            'A:': [
+                { name: 'Нет дискеты', type: 'file', icon: 'file' }
+            ],
+            'Games': [
+                { name: 'Doom', type: 'folder', icon: 'folder' },
+                { name: 'Quake', type: 'folder', icon: 'folder' },
+                { name: 'solitaire.exe', type: 'file', icon: 'exe' }
+            ],
+            'Music': [
+                { name: 'Backstreet Boys', type: 'folder', icon: 'folder' },
+                { name: 'Spice Girls', type: 'folder', icon: 'folder' },
+                { name: 'song.mp3', type: 'file', icon: 'music' }
+            ],
+            'Photos': [
+                { name: 'Vacation', type: 'folder', icon: 'folder' },
+                { name: 'Family', type: 'folder', icon: 'folder' },
+                { name: 'photo.jpg', type: 'file', icon: 'image' }
+            ]
+        };
+
+        // Данные для корзины
+        let recycleBin = [
+            { name: 'старый_файл.txt', originalPath: 'C:\\Documents', deletedDate: '15.05.1998', icon: 'file' },
+            { name: 'ненужный.doc', originalPath: 'D:\\Temp', deletedDate: '12.05.1998', icon: 'file' }
+        ];
+
+        // Обновление часов
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('clock').textContent = timeString;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Генерация случайной суммы
+        function generateRandomAmount() {
+            const amount = Math.floor(Math.random() * 5000) + 1;
+            document.getElementById('amountValue').textContent = amount + ' руб.';
+        }
+
+        // Перемещение окон
+        let activeWindow = null;
+        let offsetX, offsetY;
+
+        document.addEventListener('mousedown', function(e) {
+            if (e.target.closest('.title-bar')) {
+                const titleBar = e.target.closest('.title-bar');
+                const window = titleBar.parentElement;
+                activeWindow = window;
+                
+                // Поднимаем окно на передний план
+                document.querySelectorAll('.window').forEach(w => {
+                    w.classList.remove('active');
+                });
+                window.classList.add('active');
+                
+                offsetX = e.clientX - window.offsetLeft;
+                offsetY = e.clientY - window.offsetTop;
+                
+                document.addEventListener('mousemove', moveWindow);
+                document.addEventListener('mouseup', stopMove);
+            }
+        });
+
+        function moveWindow(e) {
+            if (activeWindow) {
+                activeWindow.style.left = (e.clientX - offsetX) + 'px';
+                activeWindow.style.top = (e.clientY - offsetY) + 'px';
+            }
+        }
+
+        function stopMove() {
+            activeWindow = null;
+            document.removeEventListener('mousemove', moveWindow);
+            document.removeEventListener('mouseup', stopMove);
+        }
+
+        // Управление окнами
+        function minimizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.style.display = 'none';
+            
+            // Обновляем кнопку в панели задач
+            const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+            if (taskbarApp) {
+                taskbarApp.classList.remove('active');
+            }
+        }
+
+        function maximizeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            if (window.style.width === 'calc(100% - 10px)') {
+                window.style.width = '500px';
+                window.style.height = '400px';
+                window.style.top = '100px';
+                window.style.left = '150px';
+            } else {
+                window.style.width = 'calc(100% - 10px)';
+                window.style.height = 'calc(100% - 42px)';
+                window.style.top = '5px';
+                window.style.left = '5px';
+            }
+        }
+
+        function closeWindow(windowId) {
+            const window = document.getElementById(windowId);
+            window.style.display = 'none';
+            
+            // Удаляем кнопку из панели задач
+            const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+            if (taskbarApp) {
+                taskbarApp.remove();
+            }
+        }
+
+        function focusWindow(windowId) {
+            const window = document.getElementById(windowId);
+            if (window.style.display === 'none') {
+                window.style.display = 'block';
+            }
+            
+            // Поднимаем окно на передний план
+            document.querySelectorAll('.window').forEach(w => {
+                w.classList.remove('active');
+            });
+            window.classList.add('active');
+            
+            // Обновляем кнопку в панели задач
+            document.querySelectorAll('.taskbar-app').forEach(app => {
+                app.classList.remove('active');
+            });
+            const taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+            if (taskbarApp) {
+                taskbarApp.classList.add('active');
+            }
+        }
+
+        // Добавление приложения в панель задач
+        function addToTaskbar(windowId, title) {
+            const taskbarApps = document.getElementById('taskbarApps');
+            
+            // Проверяем, нет ли уже такой кнопки
+            let taskbarApp = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+            
+            if (!taskbarApp) {
+                taskbarApp = document.createElement('div');
+                taskbarApp.className = 'taskbar-app active';
+                taskbarApp.textContent = title;
+                taskbarApp.setAttribute('data-window', windowId);
+                taskbarApp.onclick = () => focusWindow(windowId);
+                taskbarApps.appendChild(taskbarApp);
+            } else {
+                taskbarApp.textContent = title;
+                taskbarApp.classList.add('active');
+            }
+        }
+
+        // Меню Пуск
+        function toggleStartMenu() {
+            const startMenu = document.getElementById('startMenu');
+            startMenu.style.display = startMenu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Закрытие меню Пуск при клике вне его
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.start-button') && !e.target.closest('.start-menu')) {
+                document.getElementById('startMenu').style.display = 'none';
+            }
+        });
+
+        // Открытие окон
+        function openPaymentWindow() {
+            document.getElementById('startMenu').style.display = 'none';
+            
+            const paymentWindow = document.getElementById('paymentWindow');
+            paymentWindow.style.display = 'block';
+            focusWindow('paymentWindow');
+            addToTaskbar('paymentWindow', 'SSNBank - Оплата онлайн');
+            
+            // Генерируем случайную сумму при открытии
+            generateRandomAmount();
+        }
+
+        function openExplorer() {
+            document.getElementById('startMenu').style.display = 'none';
+            
+            const explorerWindow = document.getElementById('explorerWindow');
+            explorerWindow.style.display = 'block';
+            focusWindow('explorerWindow');
+            addToTaskbar('explorerWindow', 'Проводник - Мой компьютер');
+            
+            // Показываем содержимое корневого каталога
+            showDriveContents('C:');
+        }
+
+        function openRecycleBin() {
+            document.getElementById('startMenu').style.display = 'none';
+            
+            const recycleBinWindow = document.getElementById('recycleBinWindow');
+            recycleBinWindow.style.display = 'block';
+            focusWindow('recycleBinWindow');
+            addToTaskbar('recycleBinWindow', 'Корзина');
+            
+            updateRecycleBinDisplay();
+        }
+
+        function openNotepad() {
+            document.getElementById('startMenu').style.display = 'none';
+            
+            const notepadWindow = document.getElementById('notepadWindow');
+            notepadWindow.style.display = 'block';
+            focusWindow('notepadWindow');
+            addToTaskbar('notepadWindow', 'Блокнот - Безымянный');
+        }
+
+        function shutdown() {
+            document.getElementById('startMenu').style.display = 'none';
+            if (confirm('Завершение работы Windows\n\nВы действительно хотите завершить работу?')) {
+                alert('Теперь компьютер можно выключить.');
+            }
+        }
+
+        // Функции проводника
+        let currentPath = 'C:';
+        let pathHistory = [];
+        let historyIndex = -1;
+
+        function showDriveContents(drive) {
+            currentPath = drive;
+            const files = fileSystem[drive] || [];
+            const explorerFiles = document.getElementById('explorerFiles');
+            const explorerStatus = document.getElementById('explorerStatus');
+            const explorerLocation = document.getElementById('explorerLocation');
+            
+            explorerFiles.innerHTML = '';
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                const icon = document.createElement('span');
+                icon.className = `icon-${file.icon}`;
+                
+                fileItem.appendChild(icon);
+                fileItem.appendChild(document.createTextNode(file.name));
+                
+                if (file.type === 'folder') {
+                    fileItem.onclick = () => openFolder(file.name);
+                }
+                explorerFiles.appendChild(fileItem);
+            });
+            
+            explorerStatus.textContent = `Объектов: ${files.length}`;
+            explorerLocation.textContent = drive;
+            
+            // Обновляем заголовок окна
+            document.getElementById('explorerWindowTitle').textContent = `Проводник - ${drive}`;
+            addToTaskbar('explorerWindow', `Проводник - ${drive}`);
+        }
+
+        function openFolder(folderName) {
+            pathHistory = pathHistory.slice(0, historyIndex + 1);
+            pathHistory.push(currentPath);
+            historyIndex++;
+            
+            currentPath = folderName;
+            
+            // Получаем файлы для папки
+            const files = fileSystem[folderName] || [];
+            const explorerFiles = document.getElementById('explorerFiles');
+            const explorerStatus = document.getElementById('explorerStatus');
+            const explorerLocation = document.getElementById('explorerLocation');
+            
+            explorerFiles.innerHTML = '';
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                const icon = document.createElement('span');
+                icon.className = `icon-${file.icon}`;
+                
+                fileItem.appendChild(icon);
+                fileItem.appendChild(document.createTextNode(file.name));
+                
+                if (file.type === 'folder') {
+                    fileItem.onclick = () => openFolder(file.name);
+                }
+                explorerFiles.appendChild(fileItem);
+            });
+            
+            explorerStatus.textContent = `Объектов: ${files.length}`;
+            explorerLocation.textContent = folderName;
+            
+            // Обновляем заголовок окна
+            document.getElementById('explorerWindowTitle').textContent = `Проводник - ${folderName}`;
+            addToTaskbar('explorerWindow', `Проводник - ${folderName}`);
+        }
+
+        function explorerBack() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const prevPath = pathHistory[historyIndex];
+                if (prevPath.includes(':')) {
+                    showDriveContents(prevPath);
+                } else {
+                    openFolder(prevPath);
+                }
+            }
+        }
+
+        function explorerForward() {
+            if (historyIndex < pathHistory.length - 1) {
+                historyIndex++;
+                const nextPath = pathHistory[historyIndex];
+                if (nextPath.includes(':')) {
+                    showDriveContents(nextPath);
+                } else {
+                    openFolder(nextPath);
+                }
+            }
+        }
+
+        function explorerUp() {
+            // Возвращаемся к корневому каталогу
+            showDriveContents('C:');
+        }
+
+        function openDrive(drive) {
+            pathHistory = pathHistory.slice(0, historyIndex + 1);
+            pathHistory.push(currentPath);
+            historyIndex++;
+            
+            showDriveContents(drive);
+        }
+
+        // Функции корзины
+        function updateRecycleBinDisplay() {
+            const recycleBinList = document.getElementById('recycleBinList');
+            const recycleBinStatus = document.getElementById('recycleBinStatus');
+            
+            recycleBinList.innerHTML = '';
+            recycleBin.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'recycle-item';
+                
+                const icon = document.createElement('span');
+                icon.className = `icon-${file.icon}`;
+                
+                item.appendChild(icon);
+                item.appendChild(document.createTextNode(file.name));
+                
+                const dateSpan = document.createElement('span');
+                dateSpan.style.marginLeft = 'auto';
+                dateSpan.style.fontSize = '10px';
+                dateSpan.style.color = '#808080';
+                dateSpan.textContent = `Удален: ${file.deletedDate}`;
+                
+                item.appendChild(dateSpan);
+                recycleBinList.appendChild(item);
+            });
+            
+            recycleBinStatus.textContent = `Файлов: ${recycleBin.length}`;
+        }
+
+        function emptyRecycleBin() {
+            if (recycleBin.length === 0) {
+                alert('Корзина уже пуста.');
+                return;
+            }
+            
+            if (confirm('Вы уверены, что хотите очистить корзину?')) {
+                recycleBin = [];
+                updateRecycleBinDisplay();
+                alert('Корзина очищена.');
+            }
+        }
+
+        function restoreAllFiles() {
+            if (recycleBin.length === 0) {
+                alert('В корзине нет файлов для восстановления.');
+                return;
+            }
+            
+            recycleBin = [];
+            updateRecycleBinDisplay();
+            alert('Все файлы восстановлены в исходные папки.');
+        }
+
+        // Функции блокнота
+        function saveNotepad() {
+            const text = document.getElementById('notepadText').value;
+            if (text.trim() === '') {
+                alert('Нет текста для сохранения.');
+                return;
+            }
+            
+            alert('Файл сохранен как "Безымянный.txt"');
+        }
+
+        function clearNotepad() {
+            if (confirm('Очистить содержимое блокнота?')) {
+                document.getElementById('notepadText').value = '';
+            }
+        }
+
+        // Функции оплаты
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+            
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            
+            input.value = formattedValue;
+        }
+
+        function formatExpiryDate(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            
+            if (value.length >= 2) {
+                input.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+        }
+
+        document.getElementById('cardNumber').addEventListener('input', function() {
+            formatCardNumber(this);
+        });
+
+        document.getElementById('expiryDate').addEventListener('input', function() {
+            formatExpiryDate(this);
+        });
+
+        document.getElementById('cvv').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        function processPayment() {
+            const amount = document.getElementById('amountValue').textContent;
+            alert(`Платеж на сумму ${amount} обрабатывается...\n\nСпасибо за использование SSNBank!`);
+            document.getElementById('paymentForm').reset();
+            generateRandomAmount();
+        }
+
+        function cancelPayment() {
+            if(confirm('Вы уверены, что хотите отменить платеж?')) {
+                document.getElementById('paymentForm').reset();
+                alert('Платеж отменен');
+                generateRandomAmount();
+            }
+        }
+
+        // Инициализация при загрузке
+        window.onload = function() {
+            generateRandomAmount();
+            openPaymentWindow();
+        };
+    </script>
+</body>
+</html>
