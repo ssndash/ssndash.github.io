@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <link href="ssnbank.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Рабочий стол -->
     <div class="desktop">
@@ -129,7 +131,8 @@
                     <span class="icon-folder"></span> Дисковод (A:)
                 </div>
                 <div class="file-item" onclick="openRecycleBin()">
-                    <span class="icon-recycle" style="width:16px;height:16px;display:inline-block;margin-right:5px;"></span> Корзина
+                    <span class="icon-recycle"
+                        style="width:16px;height:16px;display:inline-block;margin-right:5px;"></span> Корзина
                 </div>
             </div>
             <div class="explorer-files" id="explorerFiles">
@@ -201,11 +204,11 @@
             <div class="start-button-icon"></div>
             <span>Пуск</span>
         </div>
-        
+
         <div class="taskbar-apps" id="taskbarApps">
             <!-- Запущенные приложения будут добавляться сюда -->
         </div>
-        
+
         <div class="clock" id="clock">00:00:00</div>
     </div>
 
@@ -214,24 +217,35 @@
         <div class="start-menu-header">Windows 95</div>
         <div class="start-menu-items">
             <div class="start-menu-item" onclick="openPaymentWindow()">
-                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/globe_map-2.png') no-repeat center/contain;"></span> SSNBank
+                <span
+                    style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/globe_map-2.png') no-repeat center/contain;"></span>
+                SSNBank
             </div>
             <div class="start-menu-item" onclick="openExplorer()">
-                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/computer_explorer-2.png') no-repeat center/contain;"></span> Мой компьютер
+                <span
+                    style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/computer_explorer-2.png') no-repeat center/contain;"></span>
+                Мой компьютер
             </div>
             <div class="start-menu-item" onclick="openRecycleBin()">
-                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/recycle_bin_full-0.png') no-repeat center/contain;"></span> Корзина
+                <span
+                    style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/recycle_bin_full-0.png') no-repeat center/contain;"></span>
+                Корзина
             </div>
             <div class="start-menu-item" onclick="openNotepad()">
-                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/notepad_file-2.png') no-repeat center/contain;"></span> Блокнот
+                <span
+                    style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/notepad_file-2.png') no-repeat center/contain;"></span>
+                Блокнот
             </div>
             <div class="divider"></div>
             <div class="start-menu-item" onclick="shutdown()">
-                <span style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/shut_down_with_computer-0.png') no-repeat center/contain;"></span> Завершение работы...
+                <span
+                    style="width:16px;height:16px;display:inline-block;margin-right:10px;background:url('https://win98icons.alexmeub.com/icons/png/shut_down_with_computer-0.png') no-repeat center/contain;"></span>
+                Завершение работы...
             </div>
         </div>
     </div>
 
     <script src="scripts/ssnbank.js"></script>
 </body>
+
 </html>
