@@ -1,0 +1,485 @@
+{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'MS Sans Serif', 'Microsoft Sans Serif', Arial, sans-serif;
+        user-select: none;
+    }
+
+    body {
+        background: #008080 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><rect fill="white" width="50" height="50"/><rect fill="white" x="50" y="50" width="50" height="50"/></svg>');
+        background-size: 100px 100px;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Рабочий стол */
+    .desktop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 32px;
+        overflow: hidden;
+    }
+
+    /* Панель задач */
+    .taskbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 32px;
+        background: #c0c0c0;
+        border-top: 1px solid #dfdfdf;
+        display: flex;
+        align-items: center;
+        padding: 0 3px;
+        z-index: 1000;
+    }
+
+    /* Кнопка Пуск */
+    .start-button {
+        height: 26px;
+        padding: 0 10px;
+        background: #c0c0c0;
+        border: 2px solid;
+        border-top-color: #dfdfdf;
+        border-left-color: #dfdfdf;
+        border-right-color: #808080;
+        border-bottom-color: #808080;
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        font-size: 13px;
+        margin-right: 5px;
+        gap: 5px;
+    }
+
+    .start-button:active {
+        border-top-color: #808080;
+        border-left-color: #808080;
+        border-right-color: #dfdfdf;
+        border-bottom-color: #dfdfdf;
+    }
+
+    .start-button-icon {
+        width: 16px;
+        height: 16px;
+        background-image: url('https://win98icons.alexmeub.com/icons/png/windows-4.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    /* Область запущенных приложений */
+    .taskbar-apps {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    /* Часы */
+    .clock {
+        padding: 0 10px;
+        font-size: 12px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border: 1px inset #c0c0c0;
+        background: #c0c0c0;
+        margin-left: auto;
+    }
+
+    /* Окно */
+    .window {
+        position: absolute;
+        background: #c0c0c0;
+        border: 2px solid;
+        border-top-color: #dfdfdf;
+        border-left-color: #dfdfdf;
+        border-right-color: #808080;
+        border-bottom-color: #808080;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        z-index: 10;
+        display: none;
+    }
+
+    .window.active {
+        z-index: 100;
+    }
+
+    .title-bar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        color: white;
+        padding: 3px 5px;
+        font-weight: bold;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: move;
+    }
+
+    .title-bar-controls {
+        display: flex;
+    }
+
+    .title-bar-button {
+        width: 16px;
+        height: 14px;
+        margin-left: 2px;
+        background: #c0c0c0;
+        border: 1px solid;
+        border-top-color: #dfdfdf;
+        border-left-color: #dfdfdf;
+        border-right-color: #808080;
+        border-bottom-color: #808080;
+        font-size: 9px;
+        text-align: center;
+        line-height: 12px;
+        cursor: pointer;
+    }
+
+    .window-content {
+        padding: 15px;
+        height: calc(100% - 23px);
+        overflow: auto;
+    }
+
+    /* Стили для окна оплаты */
+    .bank-logo {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #000080;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 4px;
+        border: 2px inset #c0c0c0;
+        background: white;
+        font-size: 14px;
+    }
+
+    textarea {
+        height: 200px;
+        resize: none;
+        font-family: 'Courier New', monospace;
+    }
+
+    .card-row {
+        display: flex;
+        gap: 10px;
+    }
+
+    .card-row>div {
+        flex: 1;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .button {
+        padding: 6px 15px;
+        background: #c0c0c0;
+        border: 2px solid;
+        border-top-color: #dfdfdf;
+        border-left-color: #dfdfdf;
+        border-right-color: #808080;
+        border-bottom-color: #808080;
+        font-size: 14px;
+        cursor: pointer;
+        min-width: 80px;
+    }
+
+    .button:active {
+        border-top-color: #808080;
+        border-left-color: #808080;
+        border-right-color: #dfdfdf;
+        border-bottom-color: #dfdfdf;
+    }
+
+    .status-bar {
+        background: #c0c0c0;
+        border-top: 1px solid #808080;
+        padding: 3px 5px;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .amount-display {
+        text-align: center;
+        margin: 15px 0;
+        padding: 10px;
+        background: white;
+        border: 2px inset #c0c0c0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .security-notice {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 15px;
+        color: #808080;
+    }
+
+    .divider {
+        height: 2px;
+        background: #808080;
+        margin: 15px 0;
+        border-top: 1px solid #dfdfdf;
+    }
+
+    /* Иконки на рабочем столе */
+    .desktop-icons {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .desktop-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 70px;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        text-shadow: 1px 1px 1px black;
+        font-size: 12px;
+    }
+
+    .desktop-icon:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .desktop-icon>div:first-child {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 5px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    /* Иконки Windows 95 */
+    .icon-computer {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/computer_explorer-2.png');
+    }
+
+    .icon-recycle {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/recycle_bin_full-0.png');
+    }
+
+    .icon-notepad {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/notepad_file-2.png');
+    }
+
+    .icon-bank {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/globe_map-2.png');
+    }
+
+    .icon-folder {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/directory_closed-4.png');
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .icon-file {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/text_file-0.png');
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .icon-exe {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/msdos-1.png');
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .icon-music {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/cd_audio_cd-1.png');
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .icon-image {
+        background-image: url('https://win98icons.alexmeub.com/icons/png/paint_file-2.png');
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    /* Меню Пуск */
+    .start-menu {
+        position: absolute;
+        bottom: 32px;
+        left: 0;
+        width: 200px;
+        background: #c0c0c0;
+        border: 2px solid;
+        border-top-color: #dfdfdf;
+        border-left-color: #dfdfdf;
+        border-right-color: #808080;
+        border-bottom-color: #808080;
+        display: none;
+        z-index: 1001;
+    }
+
+    .start-menu-header {
+        background: #000080;
+        color: white;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    .start-menu-items {
+        padding: 5px 0;
+    }
+
+    .start-menu-item {
+        padding: 5px 20px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .start-menu-item:hover {
+        background: #000080;
+        color: white;
+    }
+
+    .start-menu-item img {
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Кнопка приложения в панели задач */
+    .taskbar-app {
+        height: 22px;
+        padding: 0 10px;
+        background: #c0c0c0;
+        border: 1px solid;
+        border-top-color: #dfdfdf;
+        border-left-color: #dfdfdf;
+        border-right-color: #808080;
+        border-bottom-color: #808080;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        margin-right: 2px;
+        cursor: pointer;
+        max-width: 200px;
+        overflow: hidden;
+    }
+
+    .taskbar-app.active {
+        border: 1px inset #c0c0c0;
+    }
+
+    /* Проводник */
+    .explorer-toolbar {
+        background: #c0c0c0;
+        border-bottom: 1px solid #808080;
+        padding: 3px;
+        display: flex;
+        gap: 5px;
+    }
+
+    .explorer-content {
+        display: flex;
+        height: calc(100% - 60px);
+    }
+
+    .explorer-sidebar {
+        width: 150px;
+        border-right: 1px solid #808080;
+        padding: 5px;
+        background: white;
+    }
+
+    .explorer-files {
+        flex: 1;
+        padding: 5px;
+        background: white;
+        overflow-y: auto;
+    }
+
+    .file-item {
+        padding: 2px 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .file-item:hover {
+        background: #000080;
+        color: white;
+    }
+
+    /* Корзина */
+    .recycle-bin-content {
+        padding: 10px;
+        background: white;
+        height: calc(100% - 60px);
+        overflow-y: auto;
+    }
+
+    .recycle-item {
+        padding: 5px;
+        border-bottom: 1px solid #c0c0c0;
+        display: flex;
+        align-items: center;
+    }
+
+    .file-list {
+        height: 300px;
+        overflow-y: auto;
+        border: 1px inset #c0c0c0;
+        background: white;
+        margin-bottom: 10px;
+    }
