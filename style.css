@@ -7,7 +7,7 @@ body {
     background-color: black;
     
     /* Текстурный фон из гифки - еще лучше! */
-    background-image: url('./assets/background.gif');
+    background-image: url('./assets/background_new.gif');
     background-attachment: fixed; /* Фон не прокручивается */
 
     /* "Безопасный" шрифт с засечками */
