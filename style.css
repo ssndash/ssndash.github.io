@@ -85,14 +85,14 @@ img {
     margin: 15px auto;
 }
 
-.retro-table {
+table {
     width: 100%;
     border-collapse: collapse;
     /* Классические рамки */
     margin-bottom: 20px;
 }
 
-.retro-table td {
+table td {
     border: 1px solid #000000;
     padding: 10px;
     text-align: center;
@@ -143,13 +143,10 @@ img {
 }
 
 /* 7. Стилизация кнопок под "старину" (3D-эффект) */
-.button-container {
+button {
     text-align: center;
     /* Центрируем кнопки */
     margin-top: 15px;
-}
-
-.button-container button {
     background-color: #C0C0C0;
     /* Классический серый */
     border-top: 2px solid #FFFFFF;
@@ -162,7 +159,7 @@ img {
     cursor: pointer;
 }
 
-.button-container button:active {
+button:active {
     /* Эффект "нажатия" */
     border-top: 2px solid #404040;
     border-left: 2px solid #404040;
