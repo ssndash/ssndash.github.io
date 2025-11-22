@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSNDash - Вход в систему</title>
+    <style>
+        /* BASE STYLES - 2007 Aesthetics */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            /* Фон как на скриншоте: мягкий градиент от светло-серого к среднему серому */
+            background: linear-gradient(to bottom, #eeeeee 0%, #cccccc 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* LOGIN BOX */
+        .login-container {
+            width: 450px;
+            background-color: white;
+            border: 1px solid #777;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Аутентичная тень */
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Для синей полосы */
+        }
+        
+        /* HEADER (Синяя полоса) */
+        .login-header {
+            height: 50px;
+            background-color: #2563eb; /* Основной синий цвет */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 3px solid #1e3a8a; /* Темно-синий акцент */
+        }
+        
+        /* LOGO Text */
+        .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* LANGUAGE LINKS */
+        .language-links a {
+            color: #eeeeff;
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 11px;
+        }
+        .language-links a:hover {
+            text-decoration: underline;
+        }
+        .language-links .active {
+            font-weight: bold;
+            color: white;
+        }
+
+        /* FORM SECTION */
+        .login-form-area {
+            padding: 20px 40px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Error Message Box */
+        #error-message {
+            background-color: #ffcccc; /* Красный фон ошибки */
+            color: #cc0000;
+            border: 1px solid #cc0000;
+            padding: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none; /* Скрыто по умолчанию */
+        }
+
+        /* Form Table Layout */
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .form-table td {
+            padding: 5px 0;
+            vertical-align: middle;
+        }
+
+        .form-label {
+            width: 120px;
+            text-align: right;
+            padding-right: 10px;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="password"] {
+            border: 1px solid #999;
+            padding: 3px;
+            font-size: 12px;
+            width: 200px;
+        }
+
+        .login-button {
+            background-color: #2563eb;
+            color: white;
+            border: 1px solid #1e3a8a;
+            padding: 4px 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .login-button:hover {
+             background-color: #1e3a8a;
+        }
+        
+        /* FOOTER */
+        .login-footer {
+            background-color: #d0d0d0;
+            border-top: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+            font-size: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        
+        <!-- Header Strip -->
+        <div class="login-header">
+            <span class="logo-text">SSNDash SSN-PN-1</span>
+            <div class="language-links">
+                <a href="#">English</a> | <a href="#" class="active">Русский</a>
+            </div>
+        </div>
+
+        <!-- Form and Content Area -->
+        <div class="login-form-area">
+            
+            <div id="error-message">
+                Ошибка! Неправильный логин или пароль. Попробуйте снова. Подсказка: пароль admin.
+            </div>
+
+            <form id="login-form">
+                <table class="form-table">
+                    <tr>
+                        <td class="form-label">Аккаунт:</td>
+                        <td>
+                            <input type="text" id="username" value="admin" autocomplete="off">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">Пароль:</td>
+                        <td>
+                            <input type="password" id="password" value="admin">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="padding-top: 15px;">
+                            <button type="submit" class="login-button">Вход</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            Copyright © 2024 SSN Technologies Co., Ltd. Все права защищены.
+        </div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('error-message');
+
+        // Ожидаемые данные для входа
+        const EXPECTED_USERNAME = 'admin';
+        const EXPECTED_PASSWORD = ''; // Пароль отсутствует, как запрошено
+
+        // Путь к главному файлу (панели роутера)
+        const MAIN_DASHBOARD_FILE = '/pages/ssnrouter/ssnrouter.html';
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+            
+            const enteredUsername = usernameInput.value.trim();
+            const enteredPassword = passwordInput.value;
+
+            // Проверка логина и пароля
+            if (enteredUsername === EXPECTED_USERNAME && enteredPassword === EXPECTED_PASSWORD) {
+                // Успешный вход
+                errorMessage.style.display = 'none';
+                // Перенаправление на страницу панели управления
+                alert('Вход успешен! Перенаправление на панель управления.');
+                window.location.href = MAIN_DASHBOARD_FILE; 
+            } else {
+                // Неправильный логин или пароль
+                passwordInput.value = ''; // Очистка поля пароля
+                errorMessage.style.display = 'block'; // Показ сообщения об ошибке
+            }
+        });
+    </script>
+
+</body>
+</html>
