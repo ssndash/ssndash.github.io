@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSNDash Router Panel - Classic 2007</title>
+    <style>
+        /* BASE STYLES - 2007 Aesthetics */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; /* Классический серый фон */
+        }
+        
+        /* COLORS */
+        .ssn-blue { background-color: #2563eb; color: white; }
+        .ssn-dark-blue { color: #1e3a8a; }
+        .ssn-border-blue { border-color: #2563eb; }
+        .active-sidebar-bg { background-color: #e6f0ff; } /* Светлый фон для активного элемента */
+
+        /* HEADER Styles - Строгие прямоугольные вкладки */
+        #header {
+            border-bottom: 3px solid #000080; /* Темно-синий акцент внизу */
+            background-color: white;
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 35px;
+        }
+
+        #logo {
+            font-size: 14px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        #nav-tabs {
+            height: 100%;
+            display: flex;
+        }
+        .nav-tab {
+            padding: 0 15px;
+            line-height: 35px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid white;
+            border-top: none;
+            border-bottom: none;
+            cursor: pointer;
+        }
+        .nav-tab:hover { background-color: #e8e8e8; }
+        .nav-tab.active {
+            background-color: #2563eb; /* Синяя активная вкладка */
+            color: white;
+            border-left: 1px solid #1e3a8a;
+            border-right: 1px solid #1e3a8a;
+            border-bottom: 1px solid #2563eb;
+            font-weight: bold;
+        }
+        
+        #logout-btn {
+            background-color: #d0d0d0;
+            border: 1px solid #999;
+            padding: 2px 8px;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+
+        /* MAIN LAYOUT */
+        #main-container {
+            display: flex;
+            min-height: calc(100vh - 35px);
+        }
+
+        /* SIDEBAR Styles - Вертикальные ссылки с синим акцентом */
+        #sidebar {
+            width: 210px;
+            background-color: white;
+            border-right: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .sidebar-link {
+            display: block;
+            padding: 5px 10px 5px 5px;
+            margin: 1px 0;
+            text-decoration: none;
+            color: #333;
+            border-left: 5px solid white;
+            cursor: pointer;
+        }
+        .sidebar-link:hover { background-color: #f0f0f0; }
+        .sidebar-link.active {
+            font-weight: bold;
+            background-color: #e6f0ff; /* Светло-синий фон */
+            border-left: 5px solid #2563eb; /* Активная синяя полоса */
+            color: #1e3a8a; /* Темно-синий текст */
+        }
+
+        /* CONTENT Area Styles */
+        #content-area {
+            flex-grow: 1;
+            padding: 20px;
+            max-width: 1000px;
+        }
+        .content-header {
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #333;
+        }
+        .content-header .active-page {
+            color: #2563eb;
+            font-weight: bold;
+        }
+        .content-page {
+            display: none; /* Скрываем все страницы по умолчанию */
+        }
+        .content-page.active {
+            display: block;
+        }
+
+        /* Warning Box Styles */
+        .warning-box {
+            background-color: #ffffe0; /* Классический светло-желтый */
+            border: 1px solid #c0c000;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+        .warning-box ol { margin-top: 5px; margin-left: 20px; list-style-type: decimal; }
+        .warning-box p { font-weight: bold; margin-bottom: 5px; }
+
+        /* Table Styles (Rigid Classic Look) */
+        .classic-table {
+            width: 100%;
+            border: 1px solid #999;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .classic-table th, .classic-table td {
+            border: 1px solid #ccc;
+            padding: 5px 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .classic-table th {
+            background-color: #2563eb; /* Синий заголовок */
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .classic-table td {
+            background-color: white;
+        }
+        .table-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+        
+        /* Form Styles (Rigid, Table-based) */
+        .settings-form {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border: 1px solid #ccc;
+        }
+        .settings-form tr {
+            border: 1px solid #ccc;
+        }
+        .settings-form td {
+            padding: 5px 10px;
+            border: none;
+        }
+        .form-label {
+            width: 250px;
+            background-color: #f7f7f7;
+            text-align: right;
+            color: #333;
+            border-right: 1px solid #ccc;
+        }
+        input[type="text"], input[type="number"], input[type="password"], select {
+            border: 1px solid #999;
+            padding: 2px;
+            font-size: 12px;
+            width: 250px;
+        }
+        input[type="checkbox"] {
+            vertical-align: middle;
+        }
+        
+        .button {
+            background-color: #2563eb;
+            color: white;
+            border: 1px solid #1e3a8a;
+            padding: 4px 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .button-red {
+            background-color: #cc0000;
+            color: white;
+            border: 1px solid #990000;
+            padding: 4px 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Top Navigation Bar -->
+    <header id="header">
+        <div id="logo">SSNDash</div>
+
+        <!-- Main Navigation Tabs (Only WI-FI is active/functional for this task) -->
+        <nav id="nav-tabs">
+            <a class="nav-tab" onclick="alert('Переход на вкладку СТАТУС. Все вкладки кроме WI-FI - заглушки.')">СТАТУС</a>
+            <a class="nav-tab" onclick="alert('Переход на вкладку WAN. Все вкладки кроме WI-FI - заглушки.')">WAN</a>
+            <a class="nav-tab" onclick="alert('Переход на вкладку LAN. Все вкладки кроме WI-FI - заглушки.')">LAN</a>
+            <a id="wifi-tab" class="nav-tab active" onclick="switchMainTab('WI-FI')">WI-FI</a>
+            <a class="nav-tab" onclick="alert('Переход на вкладку БЕЗОПАСНОСТЬ. Все вкладки кроме WI-FI - заглушки.')">БЕЗОПАСНОСТЬ</a>
+            <a class="nav-tab" onclick="alert('Переход на вкладку ПРИЛОЖЕНИЯ. Все вкладки кроме WI-FI - заглушки.')">ПРИЛОЖЕНИЯ</a>
+        </nav>
+        
+        <div>
+            <button id="logout-btn" onclick="alert('Выход из системы')">Выйти</button>
+        </div>
+    </header>
+
+    <!-- Main Layout Container -->
+    <div id="main-container">
+        
+        <!-- Left Sidebar (Sub-Navigation) -->
+        <aside id="sidebar">
+            <!-- Sub-Navigation for WI-FI -->
+            <a id="sub-24-basic" href="javascript:void(0)" class="sidebar-link active" data-content="24-basic" onclick="switchWifiSubMenu(this)">
+                Осн. настройки сети 2,4 ГГц
+            </a>
+            <a id="sub-24-adv" href="javascript:void(0)" class="sidebar-link" data-content="24-advanced" onclick="switchWifiSubMenu(this)">
+                Доп. настройки сети 2,4 ГГц
+            </a>
+            <a id="sub-5-basic" href="javascript:void(0)" class="sidebar-link" data-content="5-basic" onclick="switchWifiSubMenu(this)">
+                Осн. настройки сети 5 ГГц
+            </a>
+            <a id="sub-schedule" href="javascript:void(0)" class="sidebar-link" data-content="schedule" onclick="switchWifiSubMenu(this)">
+                Автовыключение Wi-Fi
+            </a>
+            <a id="sub-coverage" href="javascript:void(0)" class="sidebar-link" data-content="coverage" onclick="switchWifiSubMenu(this)">
+                Зона покрытия Wi-Fi
+            </a>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="content-area">
+            
+            <!-- WI-FI Main Tab Content -->
+            <div id="WI-FI-content" class="content-page active">
+                
+                <!-- CONTENT BLOCK 1: Осн. настройки сети 2,4 ГГц -->
+                <div id="24-basic-content" class="content-page active">
+                    <div class="content-header">
+                        WI-FI > <span class="active-page">Осн. настройки сети 2,4 ГГц</span>
+                    </div>
+
+                    <!-- Warning/Info Block -->
+                    <div class="warning-box">
+                        <p>Внимание:</p>
+                        <ol>
+                            <li>Работа беспроводной сети может временно прерваться после изменения параметров.</li>
+                            <li>В целях безопасности рекомендуется использовать режим аутентификации WPA2/WPA3.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Wi-Fi Toggle Section -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; background-color: white; border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
+                        <label>
+                            <input type="checkbox" checked>
+                            <span style="font-size: 14px; font-weight: bold; margin-left: 5px;">Включить Wi-Fi</span>
+                        </label>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="button secondary" onclick="alert('Создать новую сеть')">
+                                Создать
+                            </button>
+                            <button class="button-red" onclick="alert('Удалить выбранную сеть')">
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SSID List Table -->
+                    <div class="table-title">Список настроенных сетей</div>
+                    <div style="border: 1px solid #ccc; background-color: white;">
+                        <table class="classic-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30px;">№</th>
+                                    <th>Имя SSID</th>
+                                    <th>Статус SSID</th>
+                                    <th>Кол-во устройств</th>
+                                    <th>Трансляция SSID</th>
+                                    <th>Настройки безопасности</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Active Row -->
+                                <tr onclick="selectSSID(1, 'SSNDash-2.4GHz', 42, 'WPA2/WPA3 PSK')">
+                                    <td><input type="checkbox" checked> 1</td>
+                                    <td class="ssn-dark-blue" style="font-weight: bold;">SSNDash-2.4GHz</td>
+                                    <td style="color: green;">Включено</td>
+                                    <td>42</td>
+                                    <td style="color: green;">Включено</td>
+                                    <td>Настроено</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"> 2</td>
+                                    <td>SSNDash-Public</td>
+                                    <td style="color: green;">Включено</td>
+                                    <td>15</td>
+                                    <td style="color: green;">Включено</td>
+                                    <td>Не настроено</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox"> 3</td>
+                                    <td>GuestNet</td>
+                                    <td style="color: red;">Выключено</td>
+                                    <td>0</td>
+                                    <td style="color: green;">Включено</td>
+                                    <td>Настроено</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Detailed Settings Form -->
+                    <div class="table-title" style="margin-top: 25px;">Данные настроенной SSID</div>
+                    <form onsubmit="event.preventDefault(); alert('Настройки применены!');" style="border: 1px solid #ccc; background-color: white;">
+                        <table class="settings-form">
+                            <tr>
+                                <td class="form-label">Имя SSID:</td>
+                                <td class="form-field">
+                                    <input type="text" id="ssidName" value="SSNDash-2.4GHz">
+                                    <span style="font-size: 10px; color: #666; margin-left: 10px;">*(1-32 символов)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">Включить SSID:</td>
+                                <td class="form-field">
+                                    <input type="checkbox" checked>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">Число связанных устройств:</td>
+                                <td class="form-field">
+                                    <input type="number" id="maxDevices" value="42" style="width: 80px;">
+                                    <span style="font-size: 10px; color: #666; margin-left: 10px;">*(1-64)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">Трансляция SSID:</td>
+                                <td class="form-field">
+                                    <input type="checkbox" checked>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">Режим аутентификации:</td>
+                                <td class="form-field">
+                                    <select id="authType">
+                                        <option>WPA2/WPA3 PSK</option>
+                                        <option>WPA2 PSK</option>
+                                        <option>Open</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">Режим шифрования:</td>
+                                <td class="form-field">
+                                    <select id="encryption">
+                                        <option>AES</option>
+                                        <option>TKIP</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">WPA PSK:</td>
+                                <td class="form-field">
+                                    <input type="password" id="wpaKey" value="********">
+                                    <button type="button" style="margin-left: 10px; background: none; border: none; color: #2563eb; text-decoration: underline; cursor: pointer;" onclick="togglePassword()">Скрыть</button>
+                                    <span style="font-size: 10px; color: #666; margin-left: 10px;">*(8-63 символа)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label">Интервал обновления ключа:</td>
+                                <td class="form-field">
+                                    <input type="number" id="keyInterval" value="3600" style="width: 80px;">
+                                    <span style="font-size: 10px; color: #666; margin-left: 10px;">*(600-86400 с)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="form-label"></td>
+                                <td class="form-field" style="padding-top: 15px;">
+                                    <button type="submit" class="button">
+                                        Применить
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- CONTENT BLOCK 2: Доп. настройки сети 2,4 ГГц (Заглушка) -->
+                <div id="24-advanced-content" class="content-page">
+                    <div class="content-header">
+                        WI-FI > <span class="active-page">Доп. настройки сети 2,4 ГГц</span>
+                    </div>
+                    <div class="warning-box" style="background-color: #f0f0f0; border: 1px dashed #999;">
+                        <p>Раздел "Дополнительные настройки 2,4 ГГц"</p>
+                        <p style="font-weight: normal;">Здесь будут расширенные настройки: режим работы (b/g/n), ширина канала, мощность передачи и т.д.</p>
+                    </div>
+                </div>
+
+                <!-- CONTENT BLOCK 3: Осн. настройки сети 5 ГГц (Заглушка) -->
+                <div id="5-basic-content" class="content-page">
+                    <div class="content-header">
+                        WI-FI > <span class="active-page">Осн. настройки сети 5 ГГц</span>
+                    </div>
+                    <div class="warning-box" style="background-color: #f0f0f0; border: 1px dashed #999;">
+                        <p>Раздел "Основные настройки 5 ГГц"</p>
+                        <p style="font-weight: normal;">Здесь будут настройки для 5 ГГц: SSID, пароль, канал.</p>
+                    </div>
+                </div>
+
+                <!-- CONTENT BLOCK 4: Автовыключение Wi-Fi (Заглушка) -->
+                <div id="schedule-content" class="content-page">
+                    <div class="content-header">
+                        WI-FI > <span class="active-page">Автовыключение Wi-Fi</span>
+                    </div>
+                    <div class="warning-box" style="background-color: #f0f0f0; border: 1px dashed #999;">
+                        <p>Раздел "Автовыключение Wi-Fi"</p>
+                        <p style="font-weight: normal;">Форма для настройки расписания работы Wi-Fi по дням недели и времени.</p>
+                    </div>
+                </div>
+                
+                <!-- CONTENT BLOCK 5: Зона покрытия Wi-Fi (Заглушка) -->
+                <div id="coverage-content" class="content-page">
+                    <div class="content-header">
+                        WI-FI > <span class="active-page">Зона покрытия Wi-Fi</span>
+                    </div>
+                    <div class="warning-box" style="background-color: #f0f0f0; border: 1px dashed #999;">
+                        <p>Раздел "Зона покрытия Wi-Fi"</p>
+                        <p style="font-weight: normal;">Настройка мощности сигнала (Высокая, Средняя, Низкая).</p>
+                    </div>
+                </div>
+
+            </div>
+            
+        </main>
+    </div>
+
+    <script>
+        // Имитация переключения пароля (скрыть/показать)
+        function togglePassword() {
+            const keyInput = document.getElementById('wpaKey');
+            const button = keyInput.nextElementSibling;
+            if (keyInput.type === 'password') {
+                keyInput.type = 'text';
+                button.textContent = 'Скрыть';
+            } else {
+                keyInput.type = 'password';
+                button.textContent = 'Показать';
+            }
+        }
+
+        // Логика переключения подменю (боковая панель Wi-Fi)
+        function switchWifiSubMenu(clickedLink) {
+            const contentId = clickedLink.getAttribute('data-content') + '-content';
+            
+            // 1. Сброс активного класса для всех ссылок
+            document.querySelectorAll('#sidebar .sidebar-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // 2. Установка активного класса для кликнутой ссылки
+            clickedLink.classList.add('active');
+
+            // 3. Скрытие всех блоков контента
+            document.querySelectorAll('#WI-FI-content .content-page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 4. Отображение нужного блока контента
+            const activeContent = document.getElementById(contentId);
+            if (activeContent) {
+                activeContent.classList.add('active');
+                
+                // Обновление заголовка (Breadcrumb)
+                const headerSpan = document.querySelector('.content-header .active-page');
+                if (headerSpan) {
+                     headerSpan.textContent = clickedLink.textContent;
+                }
+            }
+        }
+
+        // Логика переключения основного меню (верхняя панель)
+        function switchMainTab(tabName) {
+            // В данном примере переключение основного меню только отображает контент WI-FI
+            // и активирует нужную вкладку.
+            document.querySelectorAll('#nav-tabs .nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName.toLowerCase() + '-tab').classList.add('active');
+        }
+
+        // Имитация выбора SSID в таблице (обновление формы)
+        function selectSSID(index, name, devices, auth) {
+            // Простое обновление формы для демонстрации
+            document.getElementById('ssidName').value = name;
+            document.getElementById('maxDevices').value = devices;
+            document.getElementById('authType').value = auth;
+            
+            // Сброс всех чекбоксов в таблице и установка нужного
+            document.querySelectorAll('.classic-table input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.querySelector(`.classic-table tbody tr:nth-child(${index}) input[type="checkbox"]`).checked = true;
+
+            alert(`Выбрана сеть ${name}`);
+        }
+        
+        // Убеждаемся, что при загрузке активна правильная вкладка и подвкладка
+        document.addEventListener('DOMContentLoaded', () => {
+            switchWifiSubMenu(document.getElementById('sub-24-basic'));
+        });
+
+    </script>
+
+</body>
+</html>
