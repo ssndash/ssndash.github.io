@@ -224,8 +224,8 @@
 
         const App = () => {
             const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-            const [isFinished, setIsFinished] = useState(true);
-            const [showModal, setShowModal] = useState(true);
+            const [isFinished, setIsFinished] = useState(false);
+            const [showModal, setShowModal] = useState(false);
 
             useEffect(() => {
                 const glowEl = document.getElementById('global-glow');
@@ -408,4 +408,5 @@
         root.render(<App />);
     </script>
 </body>
+
 </html>
