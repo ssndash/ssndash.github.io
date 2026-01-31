@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Чашка Нового Века | Презентация 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @font-face {
+            font-family: 'Google Sans Rounded';
+            src: url('Google_Sans_Rounded-Regular.ttf') format('truetype');
+            font-weight: bold;
+        }
+        @font-face {
+            font-family: 'Google Sans';
+            src: url('https://raw.githubusercontent.com/hprobotic/Google-Sans-Font/refs/heads/master/GoogleSans-Regular.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: #020617;
+            color: white;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            margin: 0;
+            width: 100%;
+        }
+
+        .font-logo { font-family: 'Google Sans Rounded', sans-serif; }
+
+        #global-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(
+                800px circle at var(--global-x, 50%) var(--global-y, 50%),
+                rgba(37, 99, 235, 0.12),
+                transparent 70%
+            );
+        }
+
+        @media (hover: none) {
+            #global-glow { display: none; }
+            .glow-overlay { display: none; }
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            filter: blur(0.5px);
+        }
+
+        .glow-card {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .glow-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: radial-gradient(
+                300px circle at var(--mouse-x) var(--mouse-y),
+                rgba(59, 130, 246, 0.2),
+                transparent 80%
+            );
+        }
+
+        .glow-card:hover .glow-overlay { opacity: 1; }
+
+        .tight-desc {
+            letter-spacing: -0.01em;
+            line-height: 1.5;
+            color: rgba(191, 219, 254, 0.7);
+        }
+
+        .timer-nums { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+        
+        .floating-nav {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-mobile-menu {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="global-glow"></div>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+        const { motion, AnimatePresence } = window.Motion;
+
+        const LOGO_IMAGE_URL = "https://github.com/ssndash/ssndash.github.io/blob/main/assets/chashka.png?raw=true";
+        const PRODUCT_IMAGE_URL = "https://github.com/ssndash/ssndash.github.io/blob/main/assets/photo_2025-12-19_22-23-31.jpg?raw=true";
+
+        const Snowfall = () => {
+            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+            const count = isMobile ? 20 : 50; 
+            const snowflakes = useMemo(() => {
+                return Array.from({ length: count }).map((_, i) => ({
+                    id: i,
+                    left: Math.random() * 100 + '%',
+                    size: Math.random() * 2 + 2 + 'px',
+                    duration: Math.random() * 5 + 7 + 's',
+                    delay: Math.random() * 5 + 's',
+                    opacity: Math.random() * 0.4 + 0.2,
+                    xShift: (Math.random() - 0.5) * 50 + 'px'
+                }));
+            }, [count]);
+
+            return (
+                <div className="fixed inset-0 pointer-events-none z-[2] overflow-hidden">
+                    {snowflakes.map(s => (
+                        <motion.div
+                            key={s.id}
+                            className="snowflake"
+                            style={{
+                                left: s.left,
+                                width: s.size,
+                                height: s.size,
+                                opacity: s.opacity
+                            }}
+                            animate={{
+                                y: ['-10vh', '110vh'],
+                                x: [0, s.xShift]
+                            }}
+                            transition={{
+                                duration: parseFloat(s.duration),
+                                repeat: Infinity,
+                                delay: parseFloat(s.delay),
+                                ease: "linear"
+                            }}
+                        />
+                    ))}
+                </div>
+            );
+        };
+
+        const Icon = ({ name, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [name]);
+            return <i data-lucide={name} className={className}></i>;
+        };
+
+        const GlowCard = ({ children, className = "" }) => {
+            const cardRef = useRef(null);
+            const handleMouseMove = (e) => {
+                if (!cardRef.current || window.innerWidth < 768) return;
+                const rect = cardRef.current.getBoundingClientRect();
+                cardRef.current.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                cardRef.current.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            };
+
+            return (
+                <div ref={cardRef} onMouseMove={handleMouseMove} className={`glow-card ${className}`}>
+                    <div className="glow-overlay" />
+                    <div className="relative z-20 h-full">{children}</div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            const [isFinished, setIsFinished] = useState(false);
+            const [showModal, setShowModal] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+            useEffect(() => {
+                const glowEl = document.getElementById('global-glow');
+                const handleGlobalMove = (e) => {
+                    if (glowEl && window.innerWidth >= 768) {
+                        glowEl.style.setProperty('--global-x', `${e.clientX}px`);
+                        glowEl.style.setProperty('--global-y', `${e.clientY}px`);
+                    }
+                };
+                window.addEventListener('mousemove', handleGlobalMove);
+                if (window.lucide) window.lucide.createIcons();
+                return () => window.removeEventListener('mousemove', handleGlobalMove);
+            }, []);
+
+            useEffect(() => {
+                const targetDate = new Date('2026-02-01T00:00:00+03:00').getTime();
+                const timer = setInterval(() => {
+                    const now = new Date().getTime();
+                    const distance = targetDate - now;
+                    
+                    if (distance <= 0) {
+                        clearInterval(timer);
+                        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                        if (!isFinished) {
+                            setIsFinished(true);
+                            setShowModal(true);
+                        }
+                    } else {
+                        setTimeLeft({
+                            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                            seconds: Math.floor((distance % (1000 * 60)) / 1000)
+                        });
+                    }
+                }, 1000);
+                return () => clearInterval(timer);
+            }, [isFinished]);
+
+            return (
+                <div className="min-h-screen selection:bg-blue-500 selection:text-white relative w-full overflow-x-hidden bg-[#020617]">
+                    <Snowfall />
+                    
+                    <AnimatePresence>
+                        {showModal && (
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="modal-overlay"
+                            >
+                                <motion.div 
+                                    initial={{ scale: 0.9, y: 20 }}
+                                    animate={{ scale: 1, y: 0 }}
+                                    className="max-w-[90%] md:max-w-md w-full bg-slate-900 border border-blue-400/30 p-8 md:p-10 rounded-[2rem] text-center shadow-2xl"
+                                >
+                                    <div className="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-400/30">
+                                        <Icon name="party-popper" className="w-8 h-8 text-blue-400" />
+                                    </div>
+                                    <h2 className="text-2xl md:text-3xl font-bold font-logo lowercase mb-4">презентация <br/><span className="text-blue-500">завершена</span></h2>
+                                    <p className="text-blue-100/70 text-sm mb-8 tight-desc">Продажи «Чашки Нового Поколения» стартоют прямо сейчас. Спасибо, что были с нами!</p>
+                                    <button 
+                                        onClick={() => setShowModal(false)}
+                                        className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold uppercase tracking-widest text-[11px] transition-all"
+                                    >
+                                        ок, понятно
+                                    </button>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* НАВИГАЦИЯ */}
+                    <header className="fixed top-4 md:top-6 left-0 w-full z-[150] px-4 md:px-6">
+                        <div className="max-w-7xl mx-auto overflow-hidden rounded-2xl md:rounded-3xl floating-nav">
+                            <nav className="h-14 md:h-18 flex items-center justify-between px-5 md:px-10">
+                                <div className="flex items-center gap-2">
+                                    <img src={LOGO_IMAGE_URL} alt="Лого" className="h-7 md:h-9 w-auto rounded-md" />
+                                </div>
+                                
+                                {/* Десктоп ссылки */}
+                                <div className="hidden md:flex items-center gap-10">
+                                    <a href="#about" className="text-[12px] font-bold text-blue-200/80 hover:text-white uppercase tracking-widest transition-colors">Технологии</a>
+                                    <a href="#timer" className="text-[12px] font-bold text-blue-200/80 hover:text-white uppercase tracking-widest transition-colors">Запуск</a>
+                                    <a href="https://ssndash.github.io" className="px-6 py-2 bg-blue-600/20 rounded-xl border border-blue-400/30 text-blue-100 hover:bg-blue-600 transition-all font-logo lowercase text-sm">ssndash.io</a>
+                                </div>
+
+                                {/* Мобильная кнопка */}
+                                <button 
+                                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                    className="md:hidden w-10 h-10 flex items-center justify-center text-blue-400 active:scale-90 transition-transform"
+                                >
+                                    <Icon name={mobileMenuOpen ? "x" : "menu"} className="w-6 h-6" />
+                                </button>
+                            </nav>
+
+                            {/* Мобильное выпадающее меню */}
+                            <AnimatePresence>
+                                {mobileMenuOpen && (
+                                    <motion.div 
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="md:hidden nav-mobile-menu overflow-hidden"
+                                    >
+                                        <div className="flex flex-col p-6 gap-6">
+                                            <a onClick={() => setMobileMenuOpen(false)} href="#about" className="text-lg font-bold text-blue-100 uppercase tracking-widest border-b border-white/5 pb-2">Технологии</a>
+                                            <a onClick={() => setMobileMenuOpen(false)} href="#timer" className="text-lg font-bold text-blue-100 uppercase tracking-widest border-b border-white/5 pb-2">Запуск</a>
+                                            <a href="https://ssndash.github.io" className="w-full py-4 bg-blue-600 text-center rounded-xl font-logo text-lg">ssndash.github.io</a>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </header>
+
+                    <section className="relative pt-36 md:pt-52 pb-20 md:pb-32 text-center">
+                        <div className="max-w-7xl mx-auto px-6 space-y-6 md:space-y-10 flex flex-col items-center">
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] md:text-[11px] font-bold uppercase tracking-widest font-logo">
+                                Презентация 2026
+                            </motion.div>
+                            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="text-5xl sm:text-7xl md:text-[9.5rem] font-bold leading-[0.9] tracking-tighter font-logo uppercase">
+                                Чашка <br />
+                                <span className="text-blue-500">нового</span><br />
+                                поколения
+                            </motion.h1>
+                            <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="pt-6 md:pt-10 w-full max-w-5xl">
+                                <GlowCard className="rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 bg-blue-950/20 shadow-2xl group overflow-hidden">
+                                    <img src={PRODUCT_IMAGE_URL} alt="Чашка" className="w-full aspect-square md:aspect-[21/9] object-cover transition-transform duration-[2s] group-hover:scale-[1.05]" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-80" />
+                                    <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12 text-left z-20">
+                                        <p className="text-white text-4xl md:text-7xl font-logo lowercase tracking-tighter">чашка</p>
+                                        <p className="text-blue-400/80 text-[10px] md:text-[13px] uppercase tracking-wider mt-1 md:mt-3 font-bold">от создателей SvinotaOS</p>
+                                    </div>
+                                </GlowCard>
+                            </motion.div>
+                        </div>
+                    </section>
+
+                    <section id="timer" className="py-10 md:py-16">
+                        <div className="max-w-4xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+                            {[
+                                { v: timeLeft.days, l: 'дней' },
+                                { v: timeLeft.hours, l: 'часов' },
+                                { v: timeLeft.minutes, l: 'минут' },
+                                { v: timeLeft.seconds, l: 'секунд' }
+                            ].map((t, i) => (
+                                <GlowCard key={i} className="bg-white/[0.03] border border-white/5 rounded-2xl md:rounded-[2.5rem] p-5 md:p-10 text-center backdrop-blur-md">
+                                    <div className="text-4xl md:text-7xl font-bold tracking-tighter mb-1 text-white font-logo timer-nums">
+                                        {String(t.v).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-[9px] md:text-[11px] uppercase tracking-widest text-blue-500 font-black">{t.l}</div>
+                                </GlowCard>
+                            ))}
+                        </div>
+                    </section>
+
+                    <section id="about" className="py-16 md:py-32">
+                        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
+                            <FeatureCard icon="thermometer" title="Баланс тепла" desc="Идеальное поддержание температуры ваших напитков до 2001°K." />
+                            <FeatureCard icon="droplets" title="Объем X" desc="Максимальная вместимость при минимальных габаритах корпуса." />
+                            <FeatureCard icon="zap" title="Nano-покрытие" desc="Грязеотталкивающий слой позволяет очистить чашку одним движением." />
+                        </div>
+                    </section>
+
+                    <footer className="pt-20 pb-10 md:pb-16 border-t border-white/5 bg-slate-950/30">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16 mb-20 md:mb-32">
+                                <div className="space-y-6 max-w-sm">
+                                    <img src={LOGO_IMAGE_URL} alt="Лого" className="h-10 md:h-14 w-auto rounded-lg" />
+                                    <p className="text-blue-100/60 text-[12px] md:text-[14px] leading-relaxed">
+                                        ООО «ССНДЭШ» (SSNDash LLC). <br />
+                                        Старт производства: 01.02.2026, <br />
+                                        00:00 по Московскому времени.
+                                    </p>
+                                </div>
+                                <div className="space-y-4 md:space-y-6">
+                                    <p className="text-[11px] md:text-[12px] font-black text-blue-500 uppercase tracking-widest">Связь</p>
+                                    <div className="flex gap-6">
+                                        <a href="https://github.com/ssndash" className="text-white/40 hover:text-blue-400 transition-colors">
+                                            <Icon name="github" className="w-7 h-7" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 gap-6">
+                                <div className="text-[10px] md:text-[11px] text-blue-100/20 uppercase font-bold text-center">© 2026 SSNDASH LLC • ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
+                                <div className="text-[10px] md:text-[11px] text-blue-500/70 uppercase font-bold font-logo">SSNDASH.GITHUB.IO</div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const FeatureCard = ({ icon, title, desc }) => (
+            <GlowCard className="p-8 md:p-12 rounded-3xl md:rounded-[3rem] bg-white/[0.02] border border-white/5 group h-full">
+                <div className="relative space-y-6 md:space-y-8 z-20">
+                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl bg-blue-600/10 border border-blue-400/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-xl shadow-blue-900/10">
+                        <Icon name={icon} className="w-7 h-7 md:w-9 md:h-9" />
+                    </div>
+                    <div>
+                        <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-white mb-3 md:mb-5 font-logo lowercase">{title}</h3>
+                        <p className="tight-desc text-[15px] md:text-[17px]">{desc}</p>
+                    </div>
+                </div>
+            </GlowCard>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
