@@ -262,8 +262,8 @@
                                     <div className="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-400/30">
                                         <Icon name="party-popper" className="w-8 h-8 text-blue-400" />
                                     </div>
-                                    <h2 className="text-2xl md:text-3xl font-bold font-logo lowercase mb-4">презентация <br/><span className="text-blue-500">началась</span></h2>
-                                    <p className="text-blue-100/70 text-sm mb-8 tight-desc">Продажи «Чашки Нового Поколения» открыты. Спасибо, что выбрали SSNDash!</p>
+                                    <h2 className="text-2xl md:text-3xl font-bold font-logo lowercase mb-4">презентация <br/><span className="text-blue-500">заверщена</span></h2>
+                                    <p className="text-blue-100/70 text-sm mb-8 tight-desc">Продажи чашки начались, спасибо вам за то, что вы выбрали "Чашку"!</p>
                                     <button 
                                         onClick={() => setShowWelcomeModal(false)}
                                         className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold uppercase tracking-widest text-[11px] transition-all"
@@ -297,33 +297,33 @@
                                         <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center border border-blue-400/20">
                                             <Icon name="layers" className="w-6 h-6 text-blue-400" />
                                         </div>
-                                        <h2 className="text-2xl md:text-4xl font-bold font-logo lowercase">Характеристики</h2>
+                                        <h2 className="text-2xl md:text-4xl font-bold font-logo lowercase">Подробнее о чашке</h2>
                                     </div>
 
                                     <div className="space-y-6">
                                         {/* Место для добавления характеристик пользователем */}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
+                                                <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Страна производства</p>
+                                                <p className="text-white text-lg font-logo">Россия</p>
+                                            </div>
+                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
+                                                <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Год производства</p>
+                                                <p className="text-white text-lg font-logo">12/2025 - 02/2026</p>
+                                            </div>
+                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
+                                                <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Цена</p>
+                                                <p className="text-white text-lg font-logo">2001₽</p>
+                                            </div>
+                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
                                                 <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Материал</p>
-                                                <p className="text-white text-lg font-logo">Невьебический сплав</p>
-                                            </div>
-                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
-                                                <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Объем</p>
-                                                <p className="text-white text-lg font-logo">Овер дохуя мл</p>
-                                            </div>
-                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
-                                                <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Термостойкость</p>
-                                                <p className="text-white text-lg font-logo">2001°K</p>
-                                            </div>
-                                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5">
-                                                <p className="text-blue-400 text-[10px] uppercase font-bold tracking-widest mb-1">Технология</p>
-                                                <p className="text-white text-lg font-logo">Nano-Svinota™</p>
+                                                <p className="text-white text-lg font-logo">невьебически крутой</p>
                                             </div>
                                         </div>
                                         
                                         <div className="p-6 rounded-2xl bg-blue-600/5 border border-blue-400/10">
                                             <p className="text-blue-100/60 text-sm italic leading-relaxed">
-                                                * Все характеристики подтверждены независимой лабораторией SSNDash Research Lab.
+                                                * Вся информация предоставлена петербургской школой и SSNDash Team.
                                             </p>
                                         </div>
                                     </div>
@@ -391,7 +391,7 @@
                             
                             <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="pt-6 md:pt-10 w-full max-w-5xl">
                                 <GlowCard className="rounded-[2.5rem] md:rounded-[3.5rem] border border-white/10 bg-blue-950/20 shadow-2xl group overflow-hidden mb-12">
-                                    <img src={PRODUCT_IMAGE_URL} alt="Чашка" className="w-full aspect-square md:aspect-[21/9] object-cover transition-transform duration-[2s] group-hover:scale-[1.05]" />
+                                    <img src={PRODUCT_IMAGE_URL} alt="чашка" className="w-full aspect-square md:aspect-[21/9] object-cover transition-transform duration-[2s] group-hover:scale-[1.05]" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-80" />
                                     <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12 text-left z-20">
                                         <p className="text-white text-4xl md:text-7xl font-logo lowercase tracking-tighter">чашка</p>
@@ -407,7 +407,7 @@
                                     className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-6"
                                 >
                                     <a 
-                                        href="https://ssndash.github.io" 
+                                        href="https://ssndash.github.io/ssnmugoplata.html" 
                                         target="_blank"
                                         className="buy-button w-full md:w-auto flex items-center justify-center gap-4 px-10 md:px-14 py-5 md:py-6 rounded-2xl md:rounded-3xl text-white font-logo text-lg md:text-xl lowercase tracking-tight transition-all"
                                     >
@@ -439,10 +439,10 @@
                         <div className="max-w-7xl mx-auto px-6">
                             <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16 mb-20 md:mb-32">
                                 <div className="space-y-6 max-w-sm">
-                                    <img src={LOGO_IMAGE_URL} alt="Лого" className="h-10 md:h-14 w-auto rounded-lg" />
+                                    <img src={LOGO_IMAGE_URL} alt="чашка" className="h-10 md:h-14 w-auto rounded-lg" />
                                     <p className="text-blue-100/60 text-[12px] md:text-[14px] leading-relaxed">
                                         ООО «ССНДЭШ» (SSNDash LLC). <br />
-                                        Все права защищены. <br />
+                                        Все права защищены макосом. <br />
                                     </p>
                                 </div>
                                 <div className="space-y-4 md:space-y-6">
@@ -483,3 +483,4 @@
     </script>
 </body>
 </html>
+
