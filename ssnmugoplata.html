@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Покупка</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    
+    <style>
+        @font-face {
+            font-family: 'Google Sans Rounded';
+            src: url('https://raw.githubusercontent.com/ssndash/ssndash.github.io/refs/heads/main/assets/Google_Sans_Rounded-Regular.ttf') format('truetype');
+            font-weight: bold;
+        }
+        @font-face {
+            font-family: 'Google Sans';
+            src: url('https://raw.githubusercontent.com/hprobotic/Google-Sans-Font/refs/heads/master/GoogleSans-Regular.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: #020617;
+            color: white;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            margin: 0;
+            width: 100%;
+        }
+
+        .font-logo { font-family: 'Google Sans Rounded', sans-serif; }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        input {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #3b82f6 !important;
+            background: rgba(255, 255, 255, 0.07) !important;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-badge {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        }
+
+        .card-type-icon {
+            opacity: 0.2;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: grayscale(1) brightness(1.5);
+            transform: scale(0.9);
+        }
+
+        .card-type-icon.active {
+            opacity: 1;
+            filter: grayscale(0) brightness(1);
+            transform: scale(1.1);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .modal-overlay {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = window.Motion;
+
+        const LOGO_URL = "https://github.com/ssndash/ssndash.github.io/blob/main/assets/chashka.png?raw=true";
+        const REDIRECT_URL = "https://ssndash.github.io/ssnmug.html"; 
+
+        // Статичные иконки для предотвращения ошибок removeChild
+        const CheckIcon = () => (
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        );
+
+        const LockIcon = () => (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        );
+
+        const SuccessModal = ({ onExit, orderNumber }) => (
+            <div className="fixed inset-0 flex items-center justify-center p-4 modal-overlay">
+                <motion.div 
+                    initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                    animate={{ scale: 1, y: 0, opacity: 1 }}
+                    className="glass-panel max-w-md w-full p-8 md:p-12 rounded-[3rem] text-center relative overflow-hidden"
+                >
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+                    
+                    <div className="w-20 h-20 bg-blue-500/20 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-blue-500/30">
+                        <CheckIcon />
+                    </div>
+                    
+                    <h2 className="text-3xl font-bold font-logo lowercase mb-4 tracking-tight">Успешно</h2>
+                    <p className="text-blue-100/60 mb-10 text-sm leading-relaxed">
+                        Оплата успешно пройдена. <br/>
+                        Ваш номер заказа: <span className="text-white font-bold">#{orderNumber}</span>
+                    </p>
+                    
+                    <button 
+                        onClick={onExit}
+                        className="w-full py-5 bg-white text-black hover:bg-blue-50 rounded-2xl font-bold uppercase tracking-widest text-[11px] transition-all transform active:scale-95 shadow-xl"
+                    >
+                        Вернуться на сайт
+                    </button>
+                </motion.div>
+            </div>
+        );
+
+        const App = () => {
+            const [isProcessing, setIsProcessing] = useState(false);
+            const [showSuccess, setShowSuccess] = useState(false);
+            const [orderNumber, setOrderNumber] = useState(null);
+            const [formData, setFormData] = useState({
+                firstName: '', lastName: '', phone: '', address: '', zip: '',
+                cardNumber: '', expiry: '', cvc: ''
+            });
+
+            const handleInputChange = (e) => {
+                let { name, value } = e.target;
+
+                if (name === 'cardNumber') {
+                    value = value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
+                }
+
+                if (name === 'expiry') {
+                    value = value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                }
+
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setIsProcessing(true);
+                
+                // Генерация рандомного номера заказа
+                const randomOrder = Math.floor(1000 + Math.random() * 9000);
+                setOrderNumber(randomOrder);
+
+                setTimeout(() => {
+                    setIsProcessing(false);
+                    setShowSuccess(true);
+                }, 1800);
+            };
+
+            const getCardType = (number) => {
+                const clean = number.replace(/\s/g, '');
+                if (clean.startsWith('2')) return 'mir';
+                if (clean.startsWith('4')) return 'visa';
+                if (clean.startsWith('5')) return 'mastercard';
+                return null;
+            };
+
+            const cardType = getCardType(formData.cardNumber);
+
+            return (
+                <div className="min-h-screen py-8 md:py-16 px-4 relative">
+                    <AnimatePresence>
+                        {showSuccess && (
+                            <SuccessModal 
+                                orderNumber={orderNumber} 
+                                onExit={() => window.location.href = REDIRECT_URL} 
+                            />
+                        )}
+                    </AnimatePresence>
+
+                    <div className="max-w-5xl mx-auto">
+                        <header className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
+                            <div className="flex items-center gap-4">
+                                <img src={LOGO_URL} alt="KS" className="h-12 w-auto" />
+                                <h1 className="text-2xl font-logo lowercase font-bold tracking-tighter">
+                                    ssn<span className="text-blue-500">pay</span>
+                                </h1>
+                            </div>
+                            <div className="px-4 py-2 rounded-full border border-white/5 bg-white/5 flex items-center gap-3">
+                                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                                <span className="text-[10px] uppercase font-bold tracking-widest opacity-40">Secure Processing</span>
+                            </div>
+                        </header>
+
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                            <div className="lg:col-span-7 space-y-8">
+                                <section className="glass-panel p-8 md:p-10 rounded-[3rem] relative">
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="w-8 h-8 step-badge rounded-xl flex items-center justify-center text-[11px] font-bold text-white">01</div>
+                                        <h2 className="text-xl font-logo lowercase font-bold">Детали заказа</h2>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Имя</label>
+                                            <input required name="firstName" value={formData.firstName} onChange={handleInputChange} type="text" placeholder="Иван" className="w-full px-5 py-4 rounded-2xl" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Фамилия</label>
+                                            <input required name="lastName" value={formData.lastName} onChange={handleInputChange} type="text" placeholder="Иванов" className="w-full px-5 py-4 rounded-2xl" />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Телефон</label>
+                                            <input required name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="+7 (___) ___-__-__" className="w-full px-5 py-4 rounded-2xl" />
+                                        </div>
+                                        <div className="md:col-span-2 space-y-2">
+                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Адрес доставки</label>
+                                            <input required name="address" value={formData.address} onChange={handleInputChange} type="text" placeholder="Улица, дом, квартира" className="w-full px-5 py-4 rounded-2xl" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Индекс</label>
+                                            <input required name="zip" value={formData.zip} onChange={handleInputChange} type="text" maxLength="6" placeholder="101000" className="w-full px-5 py-4 rounded-2xl" />
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div className="lg:col-span-5">
+                                <section className="glass-panel p-8 md:p-10 rounded-[3rem] sticky top-8">
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="w-8 h-8 step-badge rounded-xl flex items-center justify-center text-[11px] font-bold text-white">02</div>
+                                        <h2 className="text-xl font-logo lowercase font-bold">Оплата</h2>
+                                    </div>
+
+                                    <div className="flex justify-center gap-6 mb-8 p-4 bg-white/[0.02] rounded-2xl border border-white/5">
+                                        <img 
+                                            src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Mir-logo.SVG.svg" 
+                                            className={`h-5 card-type-icon ${cardType === 'mir' ? 'active' : ''}`} 
+                                            alt="MIR"
+                                        />
+                                        <img 
+                                            src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                                            className={`h-4 my-auto card-type-icon ${cardType === 'visa' ? 'active' : ''}`} 
+                                            alt="Visa"
+                                        />
+                                        <img 
+                                            src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+                                            className={`h-6 card-type-icon ${cardType === 'mastercard' ? 'active' : ''}`} 
+                                            alt="Mastercard"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-5">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Номер карты</label>
+                                            <input required name="cardNumber" value={formData.cardNumber} onChange={handleInputChange} type="text" maxLength="19" placeholder="0000 0000 0000 0000" className="w-full px-5 py-4 rounded-2xl tracking-widest font-mono" />
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Срок</label>
+                                                <input required name="expiry" value={formData.expiry} onChange={handleInputChange} type="text" maxLength="5" placeholder="ММ/ГГ" className="w-full px-5 py-4 rounded-2xl text-center font-mono" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">CVC</label>
+                                                <input required name="cvc" value={formData.cvc} onChange={handleInputChange} type="password" maxLength="3" placeholder="***" className="w-full px-5 py-4 rounded-2xl text-center font-mono" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-10 pt-8 border-t border-white/5 space-y-6">
+                                        <div className="flex justify-between items-end">
+                                            <span className="text-[10px] uppercase font-bold text-white/30 tracking-widest">К оплате</span>
+                                            <span className="text-3xl font-logo font-bold">2 990<span className="text-blue-500 text-lg ml-1">₽</span></span>
+                                        </div>
+
+                                        <button 
+                                            disabled={isProcessing}
+                                            type="submit"
+                                            className="w-full py-6 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-[2rem] font-bold uppercase tracking-widest text-[11px] flex items-center justify-center gap-3 transition-all transform active:scale-[0.98] shadow-2xl shadow-blue-600/20"
+                                        >
+                                            {isProcessing ? <div className="spinner"></div> : (
+                                                <>Оплатить заказ <LockIcon /></>
+                                            )}
+                                        </button>
+                                    </div>
+                                </section>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
