@@ -100,6 +100,7 @@
         const LOGO_URL = "https://github.com/ssndash/ssndash.github.io/blob/main/assets/chashka.png?raw=true";
         const REDIRECT_URL = "https://ssndash.github.io/ssnmug.html"; 
 
+        // Статичные иконки для предотвращения ошибок removeChild
         const CheckIcon = () => (
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
         );
@@ -116,14 +117,17 @@
                     className="glass-panel max-w-md w-full p-8 md:p-12 rounded-[3rem] text-center relative overflow-hidden"
                 >
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
+                    
                     <div className="w-20 h-20 bg-blue-500/20 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-blue-500/30">
                         <CheckIcon />
                     </div>
+                    
                     <h2 className="text-3xl font-bold font-logo lowercase mb-4 tracking-tight">Успешно</h2>
                     <p className="text-blue-100/60 mb-10 text-sm leading-relaxed">
                         Оплата успешно пройдена. <br/>
                         Ваш номер заказа: <span className="text-white font-bold">#{orderNumber}</span>
                     </p>
+                    
                     <button 
                         onClick={onExit}
                         className="w-full py-5 bg-white text-black hover:bg-blue-50 rounded-2xl font-bold uppercase tracking-widest text-[11px] transition-all transform active:scale-95 shadow-xl"
@@ -138,7 +142,6 @@
             const [isProcessing, setIsProcessing] = useState(false);
             const [showSuccess, setShowSuccess] = useState(false);
             const [orderNumber, setOrderNumber] = useState(null);
-            const [error, setError] = useState('');
             const [formData, setFormData] = useState({
                 firstName: '', lastName: '', phone: '', address: '', zip: '',
                 cardNumber: '', expiry: '', cvc: ''
@@ -146,24 +149,11 @@
 
             const handleInputChange = (e) => {
                 let { name, value } = e.target;
-                setError('');
 
-                // 1. Только буквы для Имени и Фамилии
-                if (name === 'firstName' || name === 'lastName') {
-                    value = value.replace(/[0-9]/g, '');
-                }
-
-                // 2. Только цифры для Индекса и CVC
-                if (name === 'zip' || name === 'cvc') {
-                    value = value.replace(/\D/g, '');
-                }
-
-                // 3. Форматирование номера карты (только цифры + пробелы)
                 if (name === 'cardNumber') {
                     value = value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
                 }
 
-                // 4. Форматирование срока действия (ММ/ГГ)
                 if (name === 'expiry') {
                     value = value.replace(/\D/g, '');
                     if (value.length >= 2) {
@@ -171,39 +161,14 @@
                     }
                 }
 
-                // 5. Форматирование телефона (только цифры и спецсимволы)
-                if (name === 'phone') {
-                    value = value.replace(/[a-zA-Zа-яА-Я]/g, '');
-                }
-
                 setFormData(prev => ({ ...prev, [name]: value }));
-            };
-
-            const validateExpiry = () => {
-                const [month, year] = formData.expiry.split('/').map(num => parseInt(num));
-                if (!month || !year || formData.expiry.length < 5) return "Введите срок действия";
-                if (month < 1 || month > 12) return "Некорректный месяц";
-
-                const now = new Date();
-                const currentYear = parseInt(now.getFullYear().toString().slice(-2));
-                const currentMonth = now.getMonth() + 1;
-
-                if (year < currentYear || (year === currentYear && month < currentMonth)) {
-                    return "Карта просрочена";
-                }
-                return null;
             };
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                
-                const expiryError = validateExpiry();
-                if (expiryError) {
-                    setError(expiryError);
-                    return;
-                }
-
                 setIsProcessing(true);
+                
+                // Генерация рандомного номера заказа
                 const randomOrder = Math.floor(1000 + Math.random() * 9000);
                 setOrderNumber(randomOrder);
 
@@ -218,6 +183,7 @@
                 if (clean.startsWith('2')) return 'mir';
                 if (clean.startsWith('4')) return 'visa';
                 if (clean.startsWith('5')) return 'mastercard';
+                if (clean.startsWith('3')) return 'kspay';
                 return null;
             };
 
@@ -237,9 +203,9 @@
                     <div className="max-w-5xl mx-auto">
                         <header className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
                             <div className="flex items-center gap-4">
-                                <img src={LOGO_URL} alt="чашка" className="h-12 w-auto" />
+                                <img src={LOGO_URL} alt="KS" className="h-12 w-auto" />
                                 <h1 className="text-2xl font-logo lowercase font-bold tracking-tighter">
-                                    KS<span className="text-blue-500">pay</span>
+                                    ssn<span className="text-blue-500">pay</span>
                                 </h1>
                             </div>
                             <div className="px-4 py-2 rounded-full border border-white/5 bg-white/5 flex items-center gap-3">
@@ -289,9 +255,26 @@
                                     </div>
 
                                     <div className="flex justify-center gap-6 mb-8 p-4 bg-white/[0.02] rounded-2xl border border-white/5">
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Mir-logo.SVG.svg" className={`h-5 card-type-icon ${cardType === 'mir' ? 'active' : ''}`} alt="MIR" />
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className={`h-4 my-auto card-type-icon ${cardType === 'visa' ? 'active' : ''}`} alt="Visa" />
-                                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg" className={`h-6 card-type-icon ${cardType === 'mastercard' ? 'active' : ''}`} alt="Mastercard" />
+                                        <img 
+                                            src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Mir-logo.SVG.svg" 
+                                            className={`h-5 card-type-icon ${cardType === 'mir' ? 'active' : ''}`} 
+                                            alt="MIR"
+                                        />
+                                        <img 
+                                            src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                                            className={`h-4 my-auto card-type-icon ${cardType === 'visa' ? 'active' : ''}`} 
+                                            alt="Visa"
+                                        />
+                                        <img 
+                                            src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+                                            className={`h-6 card-type-icon ${cardType === 'mastercard' ? 'active' : ''}`} 
+                                            alt="Mastercard"
+                                        />
+                                        <img 
+                                            src="https://raw.githubusercontent.com/ssndash/ssndash.github.io/refs/heads/main/assets/kspay.svg" 
+                                            className={`h-5 my-auto card-type-icon ${cardType === 'kspay' ? 'active' : ''}`} 
+                                            alt="kspay"
+                                        />
                                     </div>
 
                                     <div className="space-y-5">
@@ -303,14 +286,13 @@
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Срок</label>
-                                                <input required name="expiry" value={formData.expiry} onChange={handleInputChange} type="text" maxLength="5" placeholder="ММ/ГГ" className={`w-full px-5 py-4 rounded-2xl text-center font-mono ${error ? 'border-red-500/50 text-red-400' : ''}`} />
+                                                <input required name="expiry" value={formData.expiry} onChange={handleInputChange} type="text" maxLength="5" placeholder="ММ/ГГ" className="w-full px-5 py-4 rounded-2xl text-center font-mono" />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">CVC</label>
                                                 <input required name="cvc" value={formData.cvc} onChange={handleInputChange} type="password" maxLength="3" placeholder="***" className="w-full px-5 py-4 rounded-2xl text-center font-mono" />
                                             </div>
                                         </div>
-                                        {error && <p className="text-[10px] text-red-400 font-bold uppercase tracking-wider text-center">{error}</p>}
                                     </div>
 
                                     <div className="mt-10 pt-8 border-t border-white/5 space-y-6">
