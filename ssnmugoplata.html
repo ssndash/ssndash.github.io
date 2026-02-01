@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Покупка</title>
+    <title>Покупка — KSpay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -40,14 +40,14 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        input {
+        input, select {
             background: rgba(255, 255, 255, 0.03) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             color: white !important;
             transition: all 0.3s ease;
         }
 
-        input:focus {
+        input:focus, select:focus {
             border-color: #3b82f6 !important;
             background: rgba(255, 255, 255, 0.07) !important;
             outline: none;
@@ -88,6 +88,16 @@
             -webkit-backdrop-filter: blur(12px);
             z-index: 100;
         }
+
+        /* Custom select styling for country */
+        .country-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            padding-right: 2.5rem;
+        }
     </style>
 </head>
 <body>
@@ -99,6 +109,11 @@
 
         const LOGO_URL = "https://github.com/ssndash/ssndash.github.io/blob/main/assets/chashka.png?raw=true";
         const REDIRECT_URL = "https://ssndash.github.io/ssnmug.html"; 
+
+        const FLAGS = {
+            RU: "https://www.svgrepo.com/show/405590/flag-for-flag-russia.svg",
+            BY: "https://www.svgrepo.com/show/405424/flag-for-flag-belarus.svg"
+        };
 
         const CheckIcon = () => (
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -139,31 +154,58 @@
             const [showSuccess, setShowSuccess] = useState(false);
             const [orderNumber, setOrderNumber] = useState(null);
             const [error, setError] = useState('');
+            const [country, setCountry] = useState('RU');
             const [formData, setFormData] = useState({
-                firstName: '', lastName: '', phone: '', address: '', zip: '',
+                firstName: '', lastName: '', phone: '+7 ', address: '', zip: '',
                 cardNumber: '', expiry: '', cvc: ''
             });
+
+            // Инициализация телефона при смене страны
+            useEffect(() => {
+                const prefix = country === 'RU' ? '+7 ' : '+375 ';
+                setFormData(prev => ({ ...prev, phone: prefix }));
+            }, [country]);
+
+            const formatPhone = (val, countryCode) => {
+                const digits = val.replace(/\D/g, '');
+                
+                if (countryCode === 'RU') {
+                    // Маска для РФ: +7 (XXX) XXX-XX-XX
+                    let res = '+7 ';
+                    const main = digits.substring(1); // убираем 7
+                    if (main.length > 0) res += '(' + main.substring(0, 3);
+                    if (main.length >= 4) res += ') ' + main.substring(3, 6);
+                    if (main.length >= 7) res += '-' + main.substring(6, 8);
+                    if (main.length >= 9) res += '-' + main.substring(8, 10);
+                    return res;
+                } else {
+                    // Маска для РБ: +375 (XX) XXX-XX-XX
+                    let res = '+375 ';
+                    const main = digits.substring(3); // убираем 375
+                    if (main.length > 0) res += '(' + main.substring(0, 2);
+                    if (main.length >= 3) res += ') ' + main.substring(2, 5);
+                    if (main.length >= 6) res += '-' + main.substring(5, 7);
+                    if (main.length >= 8) res += '-' + main.substring(7, 9);
+                    return res;
+                }
+            };
 
             const handleInputChange = (e) => {
                 let { name, value } = e.target;
                 setError('');
 
-                // 1. Только буквы для Имени и Фамилии
                 if (name === 'firstName' || name === 'lastName') {
                     value = value.replace(/[0-9]/g, '');
                 }
 
-                // 2. Только цифры для Индекса и CVC
                 if (name === 'zip' || name === 'cvc') {
                     value = value.replace(/\D/g, '');
                 }
 
-                // 3. Форматирование номера карты (только цифры + пробелы)
                 if (name === 'cardNumber') {
                     value = value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
                 }
 
-                // 4. Форматирование срока действия (ММ/ГГ)
                 if (name === 'expiry') {
                     value = value.replace(/\D/g, '');
                     if (value.length >= 2) {
@@ -171,9 +213,13 @@
                     }
                 }
 
-                // 5. Форматирование телефона (только цифры и спецсимволы)
                 if (name === 'phone') {
-                    value = value.replace(/[a-zA-Zа-яА-Я]/g, '');
+                    const prefix = country === 'RU' ? '+7' : '+375';
+                    // Не даем удалить префикс
+                    if (!value.startsWith(prefix)) {
+                        value = country === 'RU' ? '+7 ' : '+375 ';
+                    }
+                    value = formatPhone(value, country);
                 }
 
                 setFormData(prev => ({ ...prev, [name]: value }));
@@ -266,10 +312,37 @@
                                             <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Фамилия</label>
                                             <input required name="lastName" value={formData.lastName} onChange={handleInputChange} type="text" placeholder="Иванов" className="w-full px-5 py-4 rounded-2xl" />
                                         </div>
-                                        <div className="md:col-span-2 space-y-2">
-                                            <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Телефон</label>
-                                            <input required name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="+7 (___) ___-__-__" className="w-full px-5 py-4 rounded-2xl" />
+                                        
+                                        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Страна</label>
+                                                <div className="relative">
+                                                    <select 
+                                                        value={country} 
+                                                        onChange={(e) => setCountry(e.target.value)}
+                                                        className="country-select w-full px-5 py-4 rounded-2xl appearance-none cursor-pointer"
+                                                    >
+                                                        <option value="RU">Россия</option>
+                                                        <option value="BY">Беларусь</option>
+                                                    </select>
+                                                    <img src={FLAGS[country]} className="absolute left-4 top-1/2 -translate-y-1/2 w-5 pointer-events-none opacity-80" alt="flag" />
+                                                    <style>{`.country-select { padding-left: 3.2rem !important; }`}</style>
+                                                </div>
+                                            </div>
+                                            <div className="md:col-span-2 space-y-2">
+                                                <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Телефон</label>
+                                                <input 
+                                                    required 
+                                                    name="phone" 
+                                                    value={formData.phone} 
+                                                    onChange={handleInputChange} 
+                                                    type="tel" 
+                                                    placeholder={country === 'RU' ? "+7 (900) 000-00-00" : "+375 (29) 000-00-00"} 
+                                                    className="w-full px-5 py-4 rounded-2xl font-mono" 
+                                                />
+                                            </div>
                                         </div>
+
                                         <div className="md:col-span-2 space-y-2">
                                             <label className="text-[10px] uppercase font-bold text-blue-400/60 ml-1">Адрес доставки</label>
                                             <input required name="address" value={formData.address} onChange={handleInputChange} type="text" placeholder="Улица, дом, квартира" className="w-full px-5 py-4 rounded-2xl" />
