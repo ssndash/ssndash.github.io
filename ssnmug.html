@@ -137,6 +137,13 @@
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.2);
         }
+        
+        /* Стили для счетчика */
+        #visitorCounter {
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            transition: all 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -221,6 +228,7 @@
             const [showWelcomeModal, setShowWelcomeModal] = useState(false);
             const [showDetailsModal, setShowDetailsModal] = useState(false);
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [visitorData, setVisitorData] = useState({ text: 'Идёт подсчёт...', color: '', bold: false });
 
             useEffect(() => {
                 const timer = setTimeout(() => setShowWelcomeModal(true), 1000);
@@ -235,9 +243,24 @@
                 window.addEventListener('mousemove', handleGlobalMove);
                 if (window.lucide) window.lucide.createIcons();
                 
+                // Интеграция счетчика из counter.js
+                const updateCounter = () => {
+                    let randomValue = Math.floor(Math.random() * 1000);
+                    if (randomValue === 777) {
+                        setVisitorData({ text: 'SSNDash - Наше всё!', color: '#ff0000', bold: false });
+                    } else {
+                        let visitorCount = Math.floor(Math.random() * 500) + 1;
+                        setVisitorData({ text: `Вы посетитель №${visitorCount}`, color: '', bold: true });
+                    }
+                };
+
+                updateCounter();
+                const counterInterval = setInterval(updateCounter, 10000);
+
                 return () => {
                     window.removeEventListener('mousemove', handleGlobalMove);
                     clearTimeout(timer);
+                    clearInterval(counterInterval);
                 };
             }, []);
 
@@ -401,9 +424,8 @@
                                     transition={{ delay: 0.5 }}
                                     className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-6"
                                 >
-                                    {/* Изменено: Удален target="_blank" для открытия в той же вкладке */}
                                     <a 
-                                        href="https://ssndash.github.io/ssnmugoplata.html" 
+                                        href="ssnmugoplata.html" 
                                         className="buy-button w-full md:w-auto flex items-center justify-center gap-4 px-10 md:px-14 py-5 md:py-6 rounded-2xl md:rounded-3xl text-white font-logo text-lg md:text-xl lowercase tracking-tight transition-all"
                                     >
                                         купить сейчас
@@ -446,6 +468,17 @@
                                         <a href="https://github.com/ssndash" className="text-white/40 hover:text-blue-400 transition-colors">
                                             <Icon name="github" className="w-7 h-7" />
                                         </a>
+                                    </div>
+                                    
+                                    {/* Блок счетчика */}
+                                    <div className="mt-8">
+                                        <div 
+                                            id="visitorCounter" 
+                                            className="uppercase font-bold text-blue-200/40"
+                                            style={{ color: visitorData.color, fontWeight: visitorData.bold ? 'bold' : 'normal' }}
+                                        >
+                                            {visitorData.bold ? <strong>{visitorData.text}</strong> : visitorData.text}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
