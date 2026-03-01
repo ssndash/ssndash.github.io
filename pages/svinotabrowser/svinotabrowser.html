@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>svinotaBrowser — Не быстрый, не надежный</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Подключение шрифтов */
+        @font-face {
+            font-family: 'Google Sans Rounded';
+            src: url('https://raw.githubusercontent.com/ssndash/ssndash.github.io/refs/heads/main/assets/Google_Sans_Rounded-Regular.ttf') format('truetype');
+            font-weight: bold;
+        }
+        @font-face {
+            font-family: 'Google Sans';
+            src: url('https://raw.githubusercontent.com/hprobotic/Google-Sans-Font/refs/heads/master/GoogleSans-Regular.ttf') format('truetype');
+        }
+        
+        :root {
+            --vk-blue: #0077ff;
+            --bg-page: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-main: #000000;
+            --text-secondary: #5d5f61;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --feature-card-bg: #f9fafb;
+            --glow-color: rgba(0, 119, 255, 0.06);
+            --glow-hover: rgba(0, 119, 255, 0.12);
+            --menu-bg: #ffffff;
+            --menu-text: #000000;
+            --menu-hover: #f3f4f6;
+            --icon-accent-bg: rgba(59, 130, 246, 0.15);
+            --icon-accent-color: #2563eb;
+        }
+
+        body.theme-dark {
+            --bg-page: #0b0e14;
+            --bg-card: #161b22;
+            --text-main: #ffffff;
+            --text-secondary: #8b949e;
+            --nav-bg: rgba(11, 14, 20, 0.8);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --feature-card-bg: #1c2128;
+            --glow-color: rgba(0, 119, 255, 0.1);
+            --glow-hover: rgba(0, 119, 255, 0.2);
+            --menu-bg: #1f2937;
+            --menu-text: #ffffff;
+            --menu-hover: #374151;
+            --icon-accent-bg: rgba(59, 130, 246, 0.25);
+            --icon-accent-color: #60a5fa;
+        }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            scroll-behavior: smooth;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Comic Sans Regular для всех надписей svinotaBrowser */
+        .comic-font {
+            font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+            font-weight: 400 !important;
+        }
+
+        h2, .font-bold {
+            font-family: 'Google Sans Rounded', sans-serif;
+        }
+
+        .vk-button {
+            background-color: var(--vk-blue);
+            color: white;
+            transition: all 0.2s ease;
+            font-family: 'Google Sans Rounded', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vk-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .highlight-blue {
+            color: var(--vk-blue);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 119, 255, 0.35);
+        }
+
+        .glass-nav {
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .main-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            transition: background-color 0.3s ease;
+        }
+
+        .feature-card {
+            background: var(--feature-card-bg);
+            box-shadow: 0 0 20px var(--glow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            border: none;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px var(--glow-hover);
+        }
+
+        .lang-active {
+            color: var(--vk-blue);
+            font-weight: 700;
+        }
+
+        #theme-menu {
+            background-color: var(--menu-bg);
+            color: var(--menu-text);
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-option {
+            color: var(--menu-text);
+            transition: background-color 0.2s;
+        }
+
+        .theme-option:hover {
+            background-color: var(--menu-hover);
+        }
+
+        .firefox-brand {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+        }
+
+        .firefox-brand:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .feature-icon-wrapper {
+            background-color: var(--icon-accent-bg);
+            color: var(--icon-accent-color);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Навигация -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="https://ssndash.ru/assets/default256.png" 
+                     alt="svinotaBrowser Logo" 
+                     class="w-9 h-9 object-contain">
+                <span class="comic-font text-xl tracking-tight">svinotaBrowser</span>
+            </div>
+            
+            <div class="flex items-center gap-4 md:gap-8">
+                <!-- Переключатель тем -->
+                <div class="relative">
+                    <button id="theme-menu-trigger" onclick="toggleThemeMenu()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                        <i data-lucide="palette" class="w-5 h-5"></i>
+                    </button>
+                    <div id="theme-menu" class="hidden absolute top-12 right-0 shadow-xl rounded-2xl p-2 w-32 flex flex-col gap-1 z-[60]">
+                        <button onclick="setTheme('light')" class="theme-option px-4 py-2 rounded-lg text-sm text-left">Светлая</button>
+                        <button onclick="setTheme('dark')" class="theme-option px-4 py-2 rounded-lg text-sm text-left">Темная</button>
+                    </div>
+                </div>
+
+                <!-- Переключатель языка -->
+                <div class="flex items-center gap-2 text-sm font-medium opacity-60 cursor-pointer">
+                    <span id="lang-ru" onclick="setLanguage('ru')" class="lang-active">RU</span>
+                    <span>|</span>
+                    <span id="lang-en" onclick="setLanguage('en')">EN</span>
+                </div>
+                
+                <a href="https://github.com/ssndash/svinotaBrowser/releases/download/alpha/svinotaBrowser-142.0a1.en-US.win64.installer.exe" data-i18n="download_btn" class="vk-button px-5 py-2 rounded-xl font-medium text-sm active:scale-95">
+                    скачать
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Приветственная секция -->
+    <main class="flex-grow flex flex-col items-center justify-center pt-24 pb-12 px-6">
+        <div class="max-w-3xl w-full main-card p-10 md:p-14 text-center">
+            <h1 class="comic-font text-5xl md:text-7xl mb-6 tracking-tight">
+                svinotaBrowser
+            </h1>
+
+            <p id="main-text" class="text-lg md:text-2xl leading-relaxed opacity-80 mb-10">
+                <!-- Текст вставляется через JS -->
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="https://github.com/ssndash/svinotaBrowser/releases/download/alpha/svinotaBrowser-142.0a1.en-US.win64.installer.exe" data-i18n="hero_download" class="vk-button px-10 py-4 rounded-2xl font-bold text-lg shadow-lg">
+                    скачать для шиндовс
+                </a>
+                <a href="#more" data-i18n="hero_more" class="bg-black/5 dark:bg-white/10 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors flex items-center justify-center">
+                    узнать больше
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Секция преимуществ -->
+    <section id="more" class="py-16 px-6 transition-colors">
+        <div class="max-w-5xl mx-auto">
+            <h2 data-i18n="features_title" class="text-3xl md:text-4xl font-bold text-center mb-12">почему не мы?</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Стабильность -->
+                <div class="p-8 rounded-3xl feature-card">
+                    <div class="w-12 h-12 flex items-center justify-center mb-6 rounded-2xl feature-icon-wrapper">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 data-i18n="feat_1_title" class="text-xl font-bold mb-3">стабильность говна</h3>
+                    <p data-i18n="feat_1_desc" class="opacity-70 leading-relaxed text-sm">браузер базируется на последнем сорс коде файрфокса, стабильности "не существует".</p>
+                </div>
+
+                <!-- Приватность -->
+                <div class="p-8 rounded-3xl feature-card">
+                    <div class="w-12 h-12 flex items-center justify-center mb-6 rounded-2xl feature-icon-wrapper">
+                        <i data-lucide="shield-off" class="w-6 h-6"></i>
+                    </div>
+                    <h3 data-i18n="feat_2_title" class="text-xl font-bold mb-3">приватность проебали</h3>
+                    <p data-i18n="feat_2_desc" class="opacity-70 leading-relaxed text-sm">ваши данные - данные mozilla и их партнеров ахахах.</p>
+                </div>
+
+                <!-- Gemini -->
+                <div class="p-8 rounded-3xl feature-card">
+                    <div class="w-12 h-12 flex items-center justify-center mb-6 rounded-2xl feature-icon-wrapper">
+                        <svg width="28" height="28" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M32.4473 4.26367C32.7622 5.24103 33.1127 6.20673 33.5 7.1582L33.8184 7.91992C35.9387 12.8462 38.8066 17.2105 42.416 20.9961L43.1484 21.7461C47.1059 25.7025 51.7205 28.8143 56.9746 31.0762V31.0771C58.1709 31.592 59.3912 32.0472 60.6299 32.4463C59.3908 32.8455 58.1703 33.3031 56.9736 33.8184C51.7188 36.0801 47.1047 39.1923 43.1484 43.1475L43.1475 43.1484C39.4393 46.8586 36.4721 51.1462 34.252 55.9971L33.8184 56.9746C33.3032 58.171 32.8466 59.3911 32.4473 60.6299C32.0479 59.391 31.5906 58.171 31.0752 56.9746H31.0762C28.8153 51.7194 25.704 47.1043 21.7461 43.1475C18.0369 39.4392 13.7491 36.4721 8.89746 34.252L7.91992 33.8184C6.72385 33.3033 5.50409 32.8466 4.26562 32.4473C5.50355 32.0481 6.72247 31.5911 7.91797 31.0762L7.91895 31.0771C12.8459 28.9576 17.2111 26.0893 20.9971 22.4785L21.7461 21.7471C25.7029 17.7913 28.8154 13.1758 31.0771 7.9209C31.5924 6.72403 32.0479 5.50297 32.4473 4.26367Z" 
+                                stroke="currentColor" stroke-width="4.5"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="feat_3_title" class="text-xl font-bold mb-3">навайбкодили бля</h3>
+                    <p data-i18n="feat_3_desc" class="opacity-70 leading-relaxed text-sm">шучу, просто gemini чучут помог с фиксом билда.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="w-full py-12 px-6">
+        <div class="max-w-4xl mx-auto flex flex-col items-center gap-6">
+            <div class="flex flex-col items-center gap-3">
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Powered by</span>
+                <div class="firefox-brand flex items-center gap-3 cursor-default">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Firefox_Nightly_logo%2C_2019.svg" 
+                         onerror="this.src='https://raw.githubusercontent.com/mozilla/browser-logos/main/src/firefox-nightly/firefox-nightly_128x128.png'"
+                         alt="Firefox Nightly Logo" 
+                         class="w-10 h-10 object-contain">
+                    <span class="text-2xl font-bold">Firefox Nightly</span>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <p class="text-sm font-medium opacity-50">© 2026 ООО "ССНДЭШ"</p>
+                <p data-i18n="footer_disclaimer" class="text-[10px] opacity-40 mt-2 uppercase tracking-tight max-w-md mx-auto">
+                    используя этот браузер, вы добровольно становитесь свинотой.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            ru: {
+                download_btn: "скачать",
+                hero_download: "скачать для шиндовс",
+                hero_more: "узнать больше",
+                features_title: "почему не мы?",
+                feat_1_title: "стабильность говна",
+                feat_1_desc: "браузер базируется на последнем сорс коде файрфокса, стабильности ''не существует''.",
+                feat_2_title: "приватность проебали",
+                feat_2_desc: "ваши данные - данные mozilla и их партнеров ахахах.",
+                feat_3_title: "навайбкодили бля",
+                feat_3_desc: "шучу, просто gemini чучут помог с фиксом билда.",
+                footer_disclaimer: "используя этот браузер, вы добровольно становитесь свинотой.",
+                main_text: '<span class="comic-font">svinotaBrowser</span> — это <span class="highlight-blue">не быстрый</span>, <span class="highlight-blue">не надежный</span> и <span class="highlight-blue">не приватный</span> браузер от <span class="font-semibold">SSNDash Team</span>.'
+            },
+            en: {
+                download_btn: "download",
+                hero_download: "download for windows",
+                hero_more: "learn more",
+                features_title: "why not us?",
+                feat_1_title: "shitty stability",
+                feat_1_desc: "the browser is based on the latest firefox source code, stability simply ''does not exist''.",
+                feat_2_title: "there's no such thing as privacy",
+                feat_2_desc: "your data is now mozilla and their partners data i think.",
+                feat_3_title: "vibecoded af",
+                feat_3_desc: "just kidding, gemini just helped a bit with the fixing some problems.",
+                footer_disclaimer: "by using this browser, you're voluntarily becoming a svinota.",
+                main_text: '<span class="comic-font">svinotaBrowser</span> is a <span class="highlight-blue">not fast</span>, <span class="highlight-blue">not reliable</span> and <span class="highlight-blue">not private</span> web browser from the <span class="font-semibold">SSNDash Team</span>.'
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+            document.getElementById('main-text').innerHTML = translations[lang].main_text;
+            document.getElementById('lang-ru').classList.toggle('lang-active', lang === 'ru');
+            document.getElementById('lang-en').classList.toggle('lang-active', lang === 'en');
+        }
+
+        function toggleThemeMenu() {
+            document.getElementById('theme-menu').classList.toggle('hidden');
+        }
+
+        function setTheme(theme) {
+            document.body.classList.remove('theme-dark');
+            if (theme === 'dark') document.body.classList.add('theme-dark');
+            document.getElementById('theme-menu').classList.add('hidden');
+            localStorage.setItem('svinota-theme', theme);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+            setLanguage('ru');
+            const savedTheme = localStorage.getItem('svinota-theme');
+            if (savedTheme === 'dark') setTheme('dark');
+        });
+
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('theme-menu');
+            const trigger = document.getElementById('theme-menu-trigger');
+            if (menu && trigger && !menu.classList.contains('hidden') && !trigger.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
