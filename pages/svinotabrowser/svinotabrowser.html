@@ -240,7 +240,7 @@
 
     <!-- Навигация -->
     <nav class="fixed top-0 w-full z-50 glass-nav">
-        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="https://ssndash.ru/assets/default256.png" 
                      alt="svinotaBrowser Logo" 
@@ -249,8 +249,8 @@
                 <span class="comic-font text-xl tracking-tight">svinotaBrowser</span>
             </div>
             
-            <div class="flex items-center gap-2 md:gap-4">
-                <div class="hidden sm:flex items-center gap-2 text-sm font-medium opacity-60 cursor-pointer mr-2">
+            <div class="flex items-center gap-2 md:gap-3">
+                <div class="hidden sm:flex items-center gap-2 text-sm font-medium opacity-60 cursor-pointer mr-1">
                     <span id="lang-ru" onclick="setLanguage('ru')" class="lang-active">RU</span>
                     <span>|</span>
                     <span id="lang-en" onclick="setLanguage('en')">EN</span>
@@ -271,17 +271,9 @@
                     <span>скачать</span>
                 </a>
 
-                <!-- Кнопка Telegram -->
-                <a href="https://t.me/svinotaBrowser" target="_blank" class="vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
-                    <svg width="16" height="16" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
-                        <path stroke="currentColor" stroke-width="14" d="M144.89 31.212c12.573-4.107 20.025 2.553 16.026 15.044-10.038 31.391-29.749 88.653-42.277 124.81-3.281 9.457-18.463 9.087-22.275-.171-6.54-15.873-16.168-34.351-29.308-47.819-12.565-12.876-30.16-22.185-45.783-28.55-9.515-3.877-9.852-19.706-.075-22.895L144.89 31.21Z"/>
-                    </svg>
-                    <span>telegram</span>
-                </a>
-
-                <a href="https://github.com/ssndash/svinotaBrowser" target="_blank" class="vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
-                    <i data-lucide="github" class="w-4 h-4"></i>
-                    <span>github</span>
+                <a href="https://ssndash.ru/pages/svinotabrowser/svinotabrowseradrod.html" target="_blank" class="vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
+                    <i data-lucide="globe" class="w-4 h-4"></i>
+                    <span>адрод сайт</span>
                 </a>
             </div>
         </div>
@@ -362,8 +354,9 @@
     </section>
 
     <!-- Футер -->
-    <footer class="w-full py-12 px-6">
-        <div class="max-w-4xl mx-auto flex flex-col items-center gap-6">
+    <footer class="w-full py-16 px-6 border-t border-black/5 dark:border-white/5">
+        <div class="max-w-4xl mx-auto flex flex-col items-center gap-8">
+            
             <div class="flex flex-col items-center gap-3">
                 <span class="text-xs font-bold opacity-40" style="font-family: 'Google Sans Rounded', sans-serif;">Powered by</span>
                 <div class="firefox-brand flex items-center gap-3 cursor-default">
@@ -375,8 +368,23 @@
                 </div>
             </div>
             
-            <div class="text-center">
-                <p class="text-sm font-medium opacity-50">© 2026 ООО "ССНДЕШ"</p>
+            <div class="text-center flex flex-col items-center gap-4">
+                <p class="text-sm font-medium opacity-50">© 2026 ООО "ССНДЭШ"</p>
+                
+                <!-- Социальные ссылки под авторским правом, того же цвета -->
+                <div class="flex flex-wrap justify-center gap-6 opacity-50">
+                    <a href="https://github.com/ssndash/svinotaBrowser" target="_blank" class="flex items-center gap-2 text-xs font-medium hover:opacity-100 transition-opacity">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                        <span>github</span>
+                    </a>
+                    <a href="https://t.me/ssndash" target="_blank" class="flex items-center gap-2 text-xs font-medium hover:opacity-100 transition-opacity">
+                        <svg width="16" height="16" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
+                            <path stroke="currentColor" stroke-width="14" d="M144.89 31.212c12.573-4.107 20.025 2.553 16.026 15.044-10.038 31.391-29.749 88.653-42.277 124.81-3.281 9.457-18.463 9.087-22.275-.171-6.54-15.873-16.168-34.351-29.308-47.819-12.565-12.876-30.16-22.185-45.783-28.55-9.515-3.877-9.852-19.706-.075-22.895L144.89 31.21Z"/>
+                        </svg>
+                        <span>telegram</span>
+                    </a>
+                </div>
+
                 <p data-i18n="footer_disclaimer" class="text-[10px] opacity-40 mt-2 uppercase tracking-tight max-w-md mx-auto" style="font-family: 'Google Sans', sans-serif;">
                     используя этот браузер, вы добровольно становитесь свинотой.
                 </p>
