@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>t2.ru - погашение долга</title>
+</head>
+<body>
+<div>
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/61/T2_%28Tele2%29_logo_2024.svg" alt="T2">
+</div>
+<div>
+<h1>Погашение долга</h1>
+</div>
+<div>
+<button onclick="showAuth()">Оплатить</button>
+</div>
+<div id="auth" style="display:none;position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);border:1px solid black;padding:15px;background:#fff;">
+<div><b>Вход в личный кабинет t2</b></div>
+<div>Требуется авторизация</div>
+<div>
+<input placeholder="Номер телефона"><br>
+<input type="password" placeholder="Пароль"><br><br>
+<button onclick="go()">Войти</button>
+<button onclick="hideAuth()">Отмена</button>
+</div>
+</div>
+<script>
+function showAuth(){document.getElementById('auth').style.display='block';}
+function hideAuth(){document.getElementById('auth').style.display='none';}
+function go(){alert('сырпела ну оплати долг перед компанией т2 пж.');window.location.href='https://myslivets.com';}
+</script>
+</body>
+</html>
