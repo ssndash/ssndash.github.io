@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>svinotaBrowser — Не быстрый, не надежный</title>
+    <title>svinotaBrowser — Не быстрый, не надежный и не приватный браузер</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Подключение Comic Neue (современная альтернатива Comic Sans с поддержкой кириллицы) -->
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Подключение шрифтов */
         @font-face {
             font-family: 'Google Sans Rounded';
             src: url('https://raw.githubusercontent.com/ssndash/ssndash.github.io/refs/heads/main/assets/Google_Sans_Rounded-Regular.ttf') format('truetype');
@@ -147,7 +145,6 @@
             color: var(--icon-accent-color);
         }
 
-        /* Анимация бегущей строки */
         @keyframes scroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(calc(-400px * 3)); }
@@ -221,22 +218,47 @@
             max-width: 280px;
             filter: none !important;
         }
+
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-container {
+            background-color: var(--vk-blue);
+            font-family: 'Google Sans', sans-serif;
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-track {
+            display: inline-flex;
+            animation: ticker-scroll 15s linear infinite;
+        }
+
+        .ticker-item {
+            padding: 0 2rem;
+            color: white;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Навигация -->
     <nav class="fixed top-0 w-full z-50 glass-nav">
-        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="https://ssndash.ru/assets/default256.png" 
                      alt="svinotaBrowser Logo" 
                      class="w-9 h-9 object-contain"
                      style="filter: none;">
-                <span class="comic-font text-xl tracking-tight">svinotaBrowser</span>
+                <span class="comic-font text-lg md:text-xl tracking-tight">svinotaBrowser</span>
             </div>
             
-            <div class="flex items-center gap-2 md:gap-4">
+            <div class="flex items-center gap-1 md:gap-4">
                 <div class="hidden sm:flex items-center gap-2 text-sm font-medium opacity-60 cursor-pointer mr-2">
                     <span id="lang-ru" onclick="setLanguage('ru')" class="lang-active">RU</span>
                     <span>|</span>
@@ -253,19 +275,19 @@
                     </div>
                 </div>
 
-                <a href="https://github.com/ssndash/svinotaBrowser-android/releases" data-i18n="download_btn" class="vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
+                <a href="https://github.com/ssndash/svinotaBrowser-android/releases" data-i18n="download_btn" class="vk-button px-3 py-2 md:px-4 rounded-xl font-medium text-xs md:text-sm active:scale-95 whitespace-nowrap">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>скачать</span>
                 </a>
 
-                <a href="https://t.me/svinotaBrowser" target="_blank" class="vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
+                <a href="https://t.me/svinotaBrowser" target="_blank" class="hidden md:inline-flex vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
                     <svg width="16" height="16" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
                         <path stroke="currentColor" stroke-width="14" d="M144.89 31.212c12.573-4.107 20.025 2.553 16.026 15.044-10.038 31.391-29.749 88.653-42.277 124.81-3.281 9.457-18.463 9.087-22.275-.171-6.54-15.873-16.168-34.351-29.308-47.819-12.565-12.876-30.16-22.185-45.783-28.55-9.515-3.877-9.852-19.706-.075-22.895L144.89 31.21Z"/>
                     </svg>
                     <span>telegram</span>
                 </a>
 
-                <a href="https://github.com/ssndash/svinotaBrowser-android" target="_blank" class="vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
+                <a href="https://github.com/ssndash/svinotaBrowser-android" target="_blank" class="hidden md:inline-flex vk-button px-4 py-2 rounded-xl font-medium text-sm active:scale-95 whitespace-nowrap">
                     <i data-lucide="github" class="w-4 h-4"></i>
                     <span>github</span>
                 </a>
@@ -273,31 +295,66 @@
         </div>
     </nav>
 
-    <!-- Приветственная секция -->
-    <main class="flex-grow flex flex-col items-center justify-center pt-24 pb-8 px-6">
-        <div class="max-w-3xl w-full main-card p-10 md:p-14 text-center">
-            <h1 class="comic-font text-5xl md:text-7xl mb-6 tracking-tight">
+<div class="fixed top-16 w-full h-8 z-40 ticker-container shadow-md">
+        <div class="ticker-track">
+            <div class="ticker-item">
+                внимание: вышла alpha-10 - юбилейная альфа svinotaBrowser, и да svinotaBrowser!!!
+                <span class="relative inline-block cursor-pointer group mx-1">
+                    <span class="transition-all duration-300 filter blur-[4px] group-hover:blur-0 select-none group-hover:select-text bg-white/10 px-1 rounded">
+                        релиз версии 1.0 скоро кста
+                    </span>
+                </span>
+            </div>
+            <div class="ticker-item">
+                внимание: вышла alpha-10 - юбилейная альфа svinotaBrowser, и да svinotaBrowser!!!
+                <span class="relative inline-block cursor-pointer group mx-1">
+                    <span class="transition-all duration-300 filter blur-[4px] group-hover:blur-0 select-none group-hover:select-text bg-white/10 px-1 rounded">
+                        релиз версии 1.0 скоро кста
+                    </span>
+                </span>
+            </div>
+            <div class="ticker-item">
+                внимание: вышла alpha-10 - юбилейная альфа svinotaBrowser, и да svinotaBrowser!!!
+                <span class="relative inline-block cursor-pointer group mx-1">
+                    <span class="transition-all duration-300 filter blur-[4px] group-hover:blur-0 select-none group-hover:select-text bg-white/10 px-1 rounded">
+                        релиз версии 1.0 скоро кста
+                    </span>
+                </span>
+            </div>
+            <div class="ticker-item">
+                внимание: вышла alpha-10 - юбилейная альфа svinotaBrowser!!!
+                <span class="relative inline-block cursor-pointer group mx-1">
+                    <span class="transition-all duration-300 filter blur-[4px] group-hover:blur-0 select-none group-hover:select-text bg-white/10 px-1 rounded">
+                        релиз версии 1.0 скоро кста
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <main class="flex-grow flex flex-col items-center justify-center pt-32 pb-8 px-4 md:px-6">
+        <div class="max-w-3xl w-full main-card p-6 md:p-14 text-center">
+            <h1 class="comic-font text-4xl md:text-7xl mb-6 tracking-tight">
                 svinotaBrowser
             </h1>
 
-            <p id="main-text" class="text-lg md:text-2xl leading-relaxed opacity-80 mb-10">
+            <p id="main-text" class="text-base md:text-2xl leading-relaxed opacity-80 mb-8 md:mb-10">
             </p>
 
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="https://github.com/ssndash/svinotaBrowser-android/releases" data-i18n="hero_download" class="vk-button px-10 py-4 rounded-2xl font-bold text-lg shadow-lg">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="https://github.com/ssndash/svinotaBrowser-android/releases" data-i18n="hero_download" class="vk-button px-6 py-3 md:px-10 md:py-4 rounded-2xl font-bold text-base md:text-lg shadow-lg active:scale-95">
                     скачать для адрод
                 </a>
-                <a href="#more" data-i18n="hero_more" class="bg-black/5 dark:bg-white/10 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors flex items-center justify-center">
+                <a href="#more" data-i18n="hero_more" class="bg-black/5 dark:bg-white/10 px-6 py-3 md:px-10 md:py-4 rounded-2xl font-bold text-base md:text-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors flex items-center justify-center active:scale-95">
                     узнать больше
                 </a>
             </div>
         </div>
     </main>
 
-    <!-- Секция Не доверяют -->
     <section class="w-full pb-4 overflow-hidden">
         <div class="max-w-5xl mx-auto px-6 mb-4 text-center">
-            <h2 data-i18n="trusted_by" class="text-3xl md:text-4xl font-bold text-center mb-6">нам не доверяют</h2>
+            <h2 data-i18n="trusted_by" class="text-2xl md:text-4xl font-bold text-center mb-6">нам не доверяют</h2>
         </div>
         <div class="slider">
             <div class="slide-track">
@@ -311,43 +368,42 @@
         </div>
     </section>
 
-    <!-- Секция преимуществ -->
-    <section id="more" class="py-8 px-6 transition-colors">
+    <section id="more" class="py-8 px-4 md:px-6 transition-colors">
         <div class="max-w-5xl mx-auto">
-            <h2 data-i18n="features_title" class="text-3xl md:text-4xl font-bold text-center mb-12">почему не мы?</h2>
+            <h2 data-i18n="features_title" class="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12">почему не мы?</h2>
             
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="p-8 rounded-3xl feature-card">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 md:p-8 rounded-3xl feature-card">
                     <div class="w-12 h-12 flex items-center justify-center mb-6 rounded-2xl feature-icon-wrapper">
                         <i data-lucide="zap" class="w-6 h-6"></i>
                     </div>
-                    <h3 data-i18n="feat_1_title" class="text-xl font-bold mb-3">функций примерно 0</h3>
+                    <h3 data-i18n="feat_1_title" class="text-lg md:text-xl font-bold mb-3">функций примерно 0</h3>
                     <p data-i18n="feat_1_desc" class="opacity-70 leading-relaxed text-sm">так а че вы ожидали, это просто android webview, зато md3.</p>
                 </div>
 
-                <div class="p-8 rounded-3xl feature-card">
+                <div class="p-6 md:p-8 rounded-3xl feature-card">
                     <div class="w-12 h-12 flex items-center justify-center mb-6 rounded-2xl feature-icon-wrapper">
                         <i data-lucide="shield-off" class="w-6 h-6"></i>
                     </div>
-                    <h3 data-i18n="feat_2_title" class="text-xl font-bold mb-3">нестабильный максимально</h3>
+                    <h3 data-i18n="feat_2_title" class="text-lg md:text-xl font-bold mb-3">нестабильный максимально</h3>
                     <p data-i18n="feat_2_desc" class="opacity-70 leading-relaxed text-sm">это альфа билды, там стабильности "не существует".</p>
                 </div>
 
-                <div class="p-8 rounded-3xl feature-card">
+                <div class="p-6 md:p-8 rounded-3xl feature-card">
                     <div class="w-12 h-12 flex items-center justify-center mb-6 rounded-2xl feature-icon-wrapper">
                         <svg width="28" height="28" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M32.4473 4.26367C32.7622 5.24103 33.1127 6.20673 33.5 7.1582L33.8184 7.91992C35.9387 12.8462 38.8066 17.2105 42.416 20.9961L43.1484 21.7461C47.1059 25.7025 51.7205 28.8143 56.9746 31.0762V31.0771C58.1709 31.592 59.3912 32.0472 60.6299 32.4463C59.3908 32.8455 58.1703 33.3031 56.9736 33.8184C51.7188 36.0801 47.1047 39.1923 43.1484 43.1475L43.1475 43.1484C39.4393 46.8586 36.4721 51.1462 34.252 55.9971L33.8184 56.9746C33.3032 58.171 32.8466 59.3911 32.4473 60.6299C32.0479 59.391 31.5906 58.171 31.0752 56.9746H31.0762C28.8153 51.7194 25.704 47.1043 21.7461 43.1475C18.0369 39.4392 13.7491 36.4721 8.89746 34.252L7.91992 33.8184C6.72385 33.3033 5.50409 32.8466 4.26562 32.4473C5.50355 32.0481 6.72247 31.5911 7.91797 31.0762L7.91895 31.0771C12.8459 28.9576 17.2111 26.0893 20.9971 22.4785L21.7461 21.7471C25.7029 17.7913 28.8154 13.1758 31.0771 7.9209C31.5924 6.72403 32.0479 5.50297 32.4473 4.26367Z" 
                                 stroke="currentColor" stroke-width="4.5"/>
                         </svg>
                     </div>
-                    <h3 data-i18n="feat_3_title" class="text-xl font-bold mb-3">навайбкодили бля</h3>
+                    <h3 data-i18n="feat_3_title" class="text-lg md:text-xl font-bold mb-3">навайбкодили бля</h3>
                     <p data-i18n="feat_3_desc" class="opacity-70 leading-relaxed text-sm">сейчас не шучу, навайбкодил на 100%.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="w-full py-12 px-6 border-t border-black/5 dark:border-white/5">
+    <footer class="w-full py-8 md:py-12 px-6 border-t border-black/5 dark:border-white/5">
         <div class="max-w-4xl mx-auto flex flex-col items-center gap-6">
             <div class="text-center">
                 <p class="text-sm font-medium opacity-50">© 2026 ООО "ССНДЕШ"</p>
@@ -373,7 +429,7 @@
                 feat_3_desc: "сейчас не шучу, навайбкодил на 100%.",
                 footer_disclaimer: "используя этот браузер, вы добровольно становитесь свинотой.",
                 trusted_by: "нам не доверяют",
-                main_text: '<span class="comic-font">svinotaBrowser</span> — это <span class="highlight-blue">не быстрый</span>, <span class="highlight-blue">не надежный</span> и <span class="highlight-blue">не приватный</span> браузер от <span class="font-semibold">SSNDash Team</span>.'
+                main_text: '<span class="comic-font">svinotaBrowser</span> — это <span class="highlight-blue">not fast</span>, <span class="highlight-blue">not reliable</span> и <span class="highlight-blue">not private</span> браузер от <span class="font-semibold">SSNDash Team</span>.'
             },
             en: {
                 download_btn: "download",
